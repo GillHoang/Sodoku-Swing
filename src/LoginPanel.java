@@ -45,19 +45,13 @@ public class LoginPanel extends JPanel {
             contentPanel.setLayout(new BorderLayout(0, 20));
             contentPanel.setBackground(beColor);
 
-            JLabel dangNhapTitle = new JLabel("Nhập tên của bạn: ", JLabel.CENTER);
-            dangNhapTitle.setFont(new Font("Arial", Font.BOLD, 25));
+            JLabel dangNhaplabel = getDangNhaplabel();
 
-            JTextField usernameTf = new JTextField(15);
-            usernameTf.setFont(new Font("Arial", Font.PLAIN, 20));
-            usernameTf.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(lamColor, 3),
-                    BorderFactory.createEmptyBorder(10, 15, 10, 15)
-            ));
+            JTextField usernameTf = getUsernameTf();
 
             JButton dangNhapButton = getDangNhapButton(cardPanel, cardLayout, usernameTf);
 
-            contentPanel.add(dangNhapTitle, BorderLayout.NORTH);
+            contentPanel.add(dangNhaplabel, BorderLayout.NORTH);
             contentPanel.add(usernameTf, BorderLayout.CENTER);
             contentPanel.add(dangNhapButton, BorderLayout.SOUTH);
             contentPanel.setBackground(beColor);
@@ -87,7 +81,26 @@ public class LoginPanel extends JPanel {
                 cardPanel.add(new SodokuPanel(username), "sodoku");
                 cardLayout.show(cardPanel, "sodoku");
             });
+
             return dangNhapButton;
+        }
+
+        private JTextField getUsernameTf() {
+            JTextField usernameTf = new JTextField(15);
+            usernameTf.setFont(new Font("Arial", Font.PLAIN, 20));
+            usernameTf.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(lamColor, 3),
+                    BorderFactory.createEmptyBorder(10, 15, 10, 15)
+            ));
+
+            return usernameTf;
+        }
+
+        private JLabel getDangNhaplabel() {
+            JLabel dangNhapTitle = new JLabel("Nhập tên của bạn: ", JLabel.CENTER);
+            dangNhapTitle.setFont(new Font("Arial", Font.BOLD, 25));
+
+            return dangNhapTitle;
         }
     }
 }
