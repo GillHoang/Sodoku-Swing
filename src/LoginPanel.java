@@ -76,7 +76,13 @@ public class LoginPanel extends JPanel {
             bthDangNhap.setBackground(clVang);
             bthDangNhap.setForeground(clTrang);
             bthDangNhap.addActionListener(e -> {
-                username = tfUserName.getText();
+                String input = tfUserName.getText();
+
+                if (input.isEmpty()) {
+                    return;
+                }
+
+                username = input;
 
                 pnCard.add(new SodokuPanel(username), "sodoku");
                 lyCard.show(pnCard, "sodoku");
