@@ -2,33 +2,33 @@ import javax.swing.*;
 import java.awt.*;
 
 public class LoginPanel extends JPanel {
-    static Color beColor = new  Color(242, 235, 225);
-    static Color lamColor = new Color(17, 100, 102);
-    static Color trangColor = new Color(255, 255, 255);
-    static Color vangColor = new Color(224, 159, 62);
+    static Color clBe = new Color(242, 235, 225);
+    static Color clLam = new Color(17, 100, 102);
+    static Color clTrang = new Color(255, 255, 255);
+    static Color clVang = new Color(224, 159, 62);
 
-    public LoginPanel(JPanel cardPanel, CardLayout cardLayout) {
+    public LoginPanel(JPanel pnCard, CardLayout lyCard) {
         setLayout(new BorderLayout());
 
         add(new UpPanel(), BorderLayout.NORTH);
-        add(new CenterPanel(cardPanel, cardLayout), BorderLayout.CENTER);
+        add(new CenterPanel(pnCard, lyCard), BorderLayout.CENTER);
 
-        setBackground(beColor);
+        setBackground(clBe);
     }
 
     static class UpPanel extends JPanel {
         public UpPanel() {
             setLayout(new BorderLayout());
 
-            JLabel title = new JLabel("Chơi Sodoku!", JLabel.CENTER);
-            title.setFont(new Font("Arial", Font.BOLD, 34));
-            title.setForeground(trangColor);
+            JLabel lbTitle = new JLabel("Chơi Sodoku!", JLabel.CENTER);
+            lbTitle.setFont(new Font("Arial", Font.BOLD, 34));
+            lbTitle.setForeground(clTrang);
 
-            add(title, BorderLayout.CENTER);
+            add(lbTitle, BorderLayout.CENTER);
 
-            setBackground(lamColor);
+            setBackground(clLam);
             setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(lamColor, 2),
+                    BorderFactory.createLineBorder(clLam, 2),
                     BorderFactory.createEmptyBorder(10, 15, 10, 15)
             ));
         }
@@ -37,26 +37,26 @@ public class LoginPanel extends JPanel {
     static class CenterPanel extends JPanel {
         private String username;
 
-        public CenterPanel(JPanel cardPanel, CardLayout cardLayout) {
+        public CenterPanel(JPanel pnCard, CardLayout lyCard) {
             setLayout(new GridBagLayout());
-            setBackground(beColor);
+            setBackground(clBe);
 
-            JPanel contentPanel = new JPanel();
-            contentPanel.setLayout(new BorderLayout(0, 20));
-            contentPanel.setBackground(beColor);
+            JPanel pnContent = new JPanel();
+            pnContent.setLayout(new BorderLayout(0, 20));
+            pnContent.setBackground(clBe);
 
-            JLabel dangNhaplabel = getDangNhaplabel();
+            JLabel lbDangNhap = getLbDangNhap();
 
-            JTextField usernameTf = getUsernameTf();
+            JTextField tfUserName = getTfUsername();
 
-            JButton dangNhapButton = getDangNhapButton(cardPanel, cardLayout, usernameTf);
+            JButton btnDangNhap = getBtnDangNhap(pnCard, lyCard, tfUserName);
 
-            contentPanel.add(dangNhaplabel, BorderLayout.NORTH);
-            contentPanel.add(usernameTf, BorderLayout.CENTER);
-            contentPanel.add(dangNhapButton, BorderLayout.SOUTH);
-            contentPanel.setBackground(beColor);
-            contentPanel.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(lamColor, 2),
+            pnContent.add(lbDangNhap, BorderLayout.NORTH);
+            pnContent.add(tfUserName, BorderLayout.CENTER);
+            pnContent.add(btnDangNhap, BorderLayout.SOUTH);
+            pnContent.setBackground(clBe);
+            pnContent.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(clLam, 2),
                     BorderFactory.createEmptyBorder(10, 15, 10, 15)
             ));
 
@@ -67,40 +67,40 @@ public class LoginPanel extends JPanel {
             gbc.anchor = GridBagConstraints.CENTER;
             gbc.insets = new Insets(0, 0, 0, 0);
 
-            add(contentPanel, gbc);
+            add(pnContent, gbc);
         }
 
-        private JButton getDangNhapButton(JPanel cardPanel, CardLayout cardLayout, JTextField usernameTf) {
-            JButton dangNhapButton = new JButton("Bắt đầu chơi");
-            dangNhapButton.setFont(new Font("Arial", Font.BOLD, 20));
-            dangNhapButton.setBackground(vangColor);
-            dangNhapButton.setForeground(trangColor);
-            dangNhapButton.addActionListener(e -> {
-                username = usernameTf.getText();
+        private JButton getBtnDangNhap(JPanel pnCard, CardLayout lyCard, JTextField tfUserName) {
+            JButton bthDangNhap = new JButton("Bắt đầu chơi");
+            bthDangNhap.setFont(new Font("Arial", Font.BOLD, 20));
+            bthDangNhap.setBackground(clVang);
+            bthDangNhap.setForeground(clTrang);
+            bthDangNhap.addActionListener(e -> {
+                username = tfUserName.getText();
 
-                cardPanel.add(new SodokuPanel(username), "sodoku");
-                cardLayout.show(cardPanel, "sodoku");
+                pnCard.add(new SodokuPanel(username), "sodoku");
+                lyCard.show(pnCard, "sodoku");
             });
 
-            return dangNhapButton;
+            return bthDangNhap;
         }
 
-        private JTextField getUsernameTf() {
-            JTextField usernameTf = new JTextField(15);
-            usernameTf.setFont(new Font("Arial", Font.PLAIN, 20));
-            usernameTf.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(lamColor, 3),
+        private JTextField getTfUsername() {
+            JTextField tfUsername = new JTextField(15);
+            tfUsername.setFont(new Font("Arial", Font.PLAIN, 20));
+            tfUsername.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(clLam, 3),
                     BorderFactory.createEmptyBorder(10, 15, 10, 15)
             ));
 
-            return usernameTf;
+            return tfUsername;
         }
 
-        private JLabel getDangNhaplabel() {
-            JLabel dangNhapTitle = new JLabel("Nhập tên của bạn: ", JLabel.CENTER);
-            dangNhapTitle.setFont(new Font("Arial", Font.BOLD, 25));
+        private JLabel getLbDangNhap() {
+            JLabel lbDangNhapTitle = new JLabel("Nhập tên của bạn: ", JLabel.CENTER);
+            lbDangNhapTitle.setFont(new Font("Arial", Font.BOLD, 25));
 
-            return dangNhapTitle;
+            return lbDangNhapTitle;
         }
     }
 }
