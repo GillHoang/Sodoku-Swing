@@ -21,7 +21,7 @@ public class LoginPanel extends JPanel {
             setLayout(new BorderLayout());
 
             JLabel lbTitle = new JLabel("Chơi Sodoku!", JLabel.CENTER);
-            lbTitle.setFont(new Font("Arial", Font.BOLD, 34));
+            lbTitle.setFont(createDefaultStyle(34));
             lbTitle.setForeground(clTrang);
 
             add(lbTitle, BorderLayout.CENTER);
@@ -72,7 +72,7 @@ public class LoginPanel extends JPanel {
 
         private JButton getBtnDangNhap(JPanel pnCard, CardLayout lyCard, JTextField tfUserName) {
             JButton bthDangNhap = new JButton("Bắt đầu chơi");
-            bthDangNhap.setFont(new Font("Arial", Font.BOLD, 20));
+            bthDangNhap.setFont(createDefaultStyle(20));
             bthDangNhap.setBackground(clVang);
             bthDangNhap.setForeground(clTrang);
             bthDangNhap.addActionListener(e -> {
@@ -93,7 +93,7 @@ public class LoginPanel extends JPanel {
 
         private JTextField getTfUsername() {
             JTextField tfUsername = new JTextField(15);
-            tfUsername.setFont(new Font("Arial", Font.PLAIN, 20));
+            tfUsername.setFont(createDefaultStyle(20));
             tfUsername.setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createLineBorder(clLam, 3),
                     BorderFactory.createEmptyBorder(10, 15, 10, 15)
@@ -104,9 +104,13 @@ public class LoginPanel extends JPanel {
 
         private JLabel getLbDangNhap() {
             JLabel lbDangNhapTitle = new JLabel("Nhập tên của bạn: ", JLabel.CENTER);
-            lbDangNhapTitle.setFont(new Font("Arial", Font.BOLD, 25));
+            lbDangNhapTitle.setFont(createDefaultStyle(20));
 
             return lbDangNhapTitle;
         }
+    }
+
+    public static Font createDefaultStyle(int size) {
+        return new Font("Arial", Font.BOLD, size);
     }
 }
