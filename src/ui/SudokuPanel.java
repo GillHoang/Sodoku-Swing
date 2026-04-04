@@ -63,6 +63,7 @@ public class SudokuPanel extends JPanel {
         static class InformationPanel extends JPanel {
             public InformationPanel() {
                 super();
+                setBackground(clLam);
             }
         }
 
@@ -125,7 +126,9 @@ public class SudokuPanel extends JPanel {
                 for (int i = 1; i <= 9; i++) {
                     JButton btn = new JButton(String.valueOf(i));
                     btn.setFont(Utils.createDefaultStyle(30));
-                    btn.setBackground(clTrang);
+                    btn.setForeground(clTrang);
+                    btn.setBackground(clLam);
+                    btn.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
                     pnNumber.add(btn);
                 }
 
