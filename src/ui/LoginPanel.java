@@ -28,10 +28,7 @@ public class LoginPanel extends JPanel {
             add(lbTitle, BorderLayout.CENTER);
 
             setBackground(clLam);
-            setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(clLam, 2),
-                    BorderFactory.createEmptyBorder(10, 15, 10, 15)
-            ));
+            setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(clLam, 2), BorderFactory.createEmptyBorder(10, 15, 10, 15)));
         }
     }
 
@@ -56,10 +53,7 @@ public class LoginPanel extends JPanel {
             pnContent.add(tfUserName, BorderLayout.CENTER);
             pnContent.add(btnDangNhap, BorderLayout.SOUTH);
             pnContent.setBackground(clBe);
-            pnContent.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(clLam, 2),
-                    BorderFactory.createEmptyBorder(10, 15, 10, 15)
-            ));
+            pnContent.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(clLam, 2), BorderFactory.createEmptyBorder(10, 15, 10, 15)));
 
             add(pnContent, new GridBagConstraints());
         }
@@ -88,10 +82,7 @@ public class LoginPanel extends JPanel {
         private JTextField getTfUsername() {
             JTextField tfUsername = new JTextField(15);
             tfUsername.setFont(Utils.createDefaultStyle(20));
-            tfUsername.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(clLam, 3),
-                    BorderFactory.createEmptyBorder(10, 15, 10, 15)
-            ));
+            tfUsername.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(clLam, 3), BorderFactory.createEmptyBorder(10, 15, 10, 15)));
 
             return tfUsername;
         }

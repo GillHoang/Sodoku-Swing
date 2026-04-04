@@ -58,8 +58,7 @@ public class Sudoku {
     // Check if it's safe to put num in the cell (i, j)
     // Ensure num is not used in row, column, or box
     public static boolean checkIfSafe(int[][] grid, int i, int j, int num) {
-        return (unUsedInRow(grid, i, num) && unUsedInCol(grid, j, num) &&
-                unUsedInBox(grid, i - i % 3, j - j % 3, num));
+        return (unUsedInRow(grid, i, num) && unUsedInCol(grid, j, num) && unUsedInBox(grid, i - i % 3, j - j % 3, num));
     }
 
     // Fill the diagonal 3x3 matrices

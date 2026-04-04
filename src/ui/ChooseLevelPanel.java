@@ -34,16 +34,14 @@ public class ChooseLevelPanel extends JPanel {
             add(lbTitle, BorderLayout.CENTER);
 
             setBackground(clLam);
-            setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(clLam, 2),
-                    BorderFactory.createEmptyBorder(10, 15, 10, 15)
-            ));
+            setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(clLam, 2), BorderFactory.createEmptyBorder(10, 15, 10, 15)));
         }
     }
 
     static class CenterPanel extends JPanel {
         private final JPanel pnCard;
         private final CardLayout lyCard;
+
         public CenterPanel(JPanel pnCard, CardLayout lyCard) {
             this.pnCard = pnCard;
             this.lyCard = lyCard;
@@ -54,10 +52,7 @@ public class ChooseLevelPanel extends JPanel {
             JPanel pnLevel = new JPanel();
             pnLevel.setLayout(new GridLayout(4, 1, 0, 10));
             pnLevel.setBackground(clBe);
-            pnLevel.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(clLam, 2),
-                    BorderFactory.createEmptyBorder(10, 15, 10, 15)
-            ));
+            pnLevel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(clLam, 2), BorderFactory.createEmptyBorder(10, 15, 10, 15)));
 
             JLabel lbTitle = new JLabel("Chọn Level: ", JLabel.CENTER);
             lbTitle.setFont(Utils.createDefaultStyle(20));

@@ -12,11 +12,13 @@ import static helpers.Colors.clTrang;
 
 public class SudokuPanel extends JPanel {
     private static int level;
+    private static String username;
 
     public SudokuPanel(String username, int level) {
         super();
 
         SudokuPanel.level = level;
+        SudokuPanel.username = username;
 
         setLayout(new BorderLayout());
 
@@ -32,17 +34,14 @@ public class SudokuPanel extends JPanel {
 
             setLayout(new BorderLayout());
 
-            JLabel lbTitle = new JLabel("Hãy cố gắng điền hết toàn bộ ô", JLabel.CENTER);
+            JLabel lbTitle = new JLabel("Xin chào " + username + ", bạn đã chọn level " + Utils.convertNumberToLevel(level), JLabel.CENTER);
             lbTitle.setFont(Utils.createDefaultStyle(20));
             lbTitle.setForeground(clTrang);
 
             add(lbTitle, BorderLayout.CENTER);
 
             setBackground(clLam);
-            setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(clLam, 2),
-                    BorderFactory.createEmptyBorder(10, 15, 10, 15)
-            ));
+            setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(clLam, 2), BorderFactory.createEmptyBorder(10, 15, 10, 15)));
         }
     }
 
@@ -67,6 +66,30 @@ public class SudokuPanel extends JPanel {
             }
         }
 
+        static class NumberButtonPanel extends JPanel {
+            public NumberButtonPanel() {
+                super();
+                setLayout(new GridBagLayout());
+                setBackground(clLam);
+                setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(clLam, 2), BorderFactory.createEmptyBorder(2, 2, 2, 2)));
+
+                JPanel pnNumber = new JPanel();
+                pnNumber.setLayout(new GridLayout(1, 9, 5, 5));
+                pnNumber.setBackground(clLam);
+
+                for (int i = 1; i <= 9; i++) {
+                    JButton btn = new JButton(String.valueOf(i));
+                    btn.setFont(Utils.createDefaultStyle(30));
+                    btn.setForeground(clTrang);
+                    btn.setBackground(clLam);
+                    btn.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+                    pnNumber.add(btn);
+                }
+
+                add(pnNumber, new GridBagConstraints());
+            }
+        }
+
         class BoardPanel extends JPanel {
             public BoardPanel() {
                 super();
@@ -79,10 +102,7 @@ public class SudokuPanel extends JPanel {
                     JPanel pnCon = new JPanel();
                     pnCon.setLayout(new GridLayout(3, 3));
 
-                    pnCon.setBorder(BorderFactory.createCompoundBorder(
-                            BorderFactory.createLineBorder(clLam, 2),
-                            BorderFactory.createEmptyBorder(2, 2, 2, 2)
-                    ));
+                    pnCon.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(clLam, 2), BorderFactory.createEmptyBorder(2, 2, 2, 2)));
 
                     for (int j = 0; j < 9; j++) {
                         JButton btn = new JButton();
@@ -106,33 +126,6 @@ public class SudokuPanel extends JPanel {
                 }
 
                 setBackground(clLam);
-            }
-        }
-
-        static class NumberButtonPanel extends JPanel {
-            public NumberButtonPanel() {
-                super();
-                setLayout(new GridBagLayout());
-                setBackground(clLam);
-                setBorder(BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(clLam, 2),
-                        BorderFactory.createEmptyBorder(2, 2, 2, 2)
-                ));
-
-                JPanel pnNumber = new JPanel();
-                pnNumber.setLayout(new GridLayout(1, 9, 5, 5));
-                pnNumber.setBackground(clLam);
-
-                for (int i = 1; i <= 9; i++) {
-                    JButton btn = new JButton(String.valueOf(i));
-                    btn.setFont(Utils.createDefaultStyle(30));
-                    btn.setForeground(clTrang);
-                    btn.setBackground(clLam);
-                    btn.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-                    pnNumber.add(btn);
-                }
-
-                add(pnNumber, new GridBagConstraints());
             }
         }
     }
