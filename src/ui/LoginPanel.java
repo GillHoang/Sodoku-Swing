@@ -21,7 +21,7 @@ public class LoginPanel extends JPanel {
         public UpPanel() {
             setLayout(new BorderLayout());
 
-            JLabel lbTitle = new JLabel("Chơi Sodoku!", JLabel.CENTER);
+            JLabel lbTitle = new JLabel("Chơi Sudoku!", JLabel.CENTER);
             lbTitle.setFont(Utils.createDefaultStyle(34));
             lbTitle.setForeground(clTrang);
 

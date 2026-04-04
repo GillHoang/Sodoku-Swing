@@ -80,7 +80,7 @@ public class ChooseLevelPanel extends JPanel {
             btnLevel.addActionListener(e -> {
                 chosenLevel = Utils.convertLevelToNumber(level);
 
-                pnCard.add(new SodokuPanel(username, chosenLevel), "SodokuPanel");
+                pnCard.add(new SudokuPanel(username, chosenLevel), "SodokuPanel");
                 lyCard.show(pnCard, "SodokuPanel");
             });
 
