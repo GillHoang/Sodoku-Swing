@@ -1,3 +1,5 @@
+import UI.LoginPanel;
+
 import javax.swing.*;
 import java.awt.*;
 

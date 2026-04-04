@@ -1,12 +1,13 @@
+package UI;
+
+import helpers.Utils;
+
 import javax.swing.*;
 import java.awt.*;
 
-public class LoginPanel extends JPanel {
-    static Color clBe = new Color(242, 235, 225);
-    static Color clLam = new Color(17, 100, 102);
-    static Color clTrang = new Color(255, 255, 255);
-    static Color clVang = new Color(224, 159, 62);
+import static helpers.Colors.*;
 
+public class LoginPanel extends JPanel {
     public LoginPanel(JPanel pnCard, CardLayout lyCard) {
         setLayout(new BorderLayout());
 
@@ -21,7 +22,7 @@ public class LoginPanel extends JPanel {
             setLayout(new BorderLayout());
 
             JLabel lbTitle = new JLabel("Chơi Sodoku!", JLabel.CENTER);
-            lbTitle.setFont(createDefaultStyle(34));
+            lbTitle.setFont(Utils.createDefaultStyle(34));
             lbTitle.setForeground(clTrang);
 
             add(lbTitle, BorderLayout.CENTER);
@@ -60,19 +61,12 @@ public class LoginPanel extends JPanel {
                     BorderFactory.createEmptyBorder(10, 15, 10, 15)
             ));
 
-
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            gbc.anchor = GridBagConstraints.CENTER;
-            gbc.insets = new Insets(0, 0, 0, 0);
-
-            add(pnContent, gbc);
+            add(pnContent, new GridBagConstraints());
         }
 
         private JButton getBtnDangNhap(JPanel pnCard, CardLayout lyCard, JTextField tfUserName) {
             JButton bthDangNhap = new JButton("Bắt đầu chơi");
-            bthDangNhap.setFont(createDefaultStyle(20));
+            bthDangNhap.setFont(Utils.createDefaultStyle(20));
             bthDangNhap.setBackground(clVang);
             bthDangNhap.setForeground(clTrang);
             bthDangNhap.addActionListener(e -> {
@@ -84,8 +78,8 @@ public class LoginPanel extends JPanel {
 
                 username = input;
 
-                pnCard.add(new SodokuPanel(username), "sodoku");
-                lyCard.show(pnCard, "sodoku");
+                pnCard.add(new ChooseLevelPanel(pnCard, lyCard, username), "chooseLevel");
+                lyCard.show(pnCard, "chooseLevel");
             });
 
             return bthDangNhap;
@@ -93,7 +87,7 @@ public class LoginPanel extends JPanel {
 
         private JTextField getTfUsername() {
             JTextField tfUsername = new JTextField(15);
-            tfUsername.setFont(createDefaultStyle(20));
+            tfUsername.setFont(Utils.createDefaultStyle(20));
             tfUsername.setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createLineBorder(clLam, 3),
                     BorderFactory.createEmptyBorder(10, 15, 10, 15)
@@ -104,13 +98,10 @@ public class LoginPanel extends JPanel {
 
         private JLabel getLbDangNhap() {
             JLabel lbDangNhapTitle = new JLabel("Nhập tên của bạn: ", JLabel.CENTER);
-            lbDangNhapTitle.setFont(createDefaultStyle(20));
+            lbDangNhapTitle.setFont(Utils.createDefaultStyle(20));
 
             return lbDangNhapTitle;
         }
     }
 
-    public static Font createDefaultStyle(int size) {
-        return new Font("Arial", Font.BOLD, size);
-    }
 }
