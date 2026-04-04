@@ -4,16 +4,18 @@ import helpers.Utils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
 import static helpers.Colors.*;
 
 public class ChooseLevelPanel extends JPanel {
-    public String username;
+    public static String username;
+    public static int chosenLevel = 0;
 
     public ChooseLevelPanel(JPanel pnCard, CardLayout lyCard, String username) {
         setLayout(new BorderLayout());
 
-        this.username = username;
+        ChooseLevelPanel.username = username;
 
         add(new UpPanel(), BorderLayout.NORTH);
         add(new CenterPanel(pnCard, lyCard), BorderLayout.CENTER);
@@ -21,7 +23,7 @@ public class ChooseLevelPanel extends JPanel {
         setBackground(clBe);
     }
 
-    class UpPanel extends JPanel {
+    static class UpPanel extends JPanel {
         public UpPanel() {
             setLayout(new BorderLayout());
 
@@ -40,12 +42,17 @@ public class ChooseLevelPanel extends JPanel {
     }
 
     static class CenterPanel extends JPanel {
+        private final JPanel pnCard;
+        private final CardLayout lyCard;
         public CenterPanel(JPanel pnCard, CardLayout lyCard) {
+            this.pnCard = pnCard;
+            this.lyCard = lyCard;
+
             setLayout(new GridBagLayout());
             setBackground(clBe);
 
             JPanel pnLevel = new JPanel();
-            pnLevel.setLayout(new GridLayout(4, 1));
+            pnLevel.setLayout(new GridLayout(4, 1, 0, 10));
             pnLevel.setBackground(clBe);
             pnLevel.setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createLineBorder(clLam, 2),
@@ -56,9 +63,9 @@ public class ChooseLevelPanel extends JPanel {
             lbTitle.setFont(Utils.createDefaultStyle(20));
             pnLevel.add(lbTitle);
 
-            pnLevel.add(createLevelButton("Easy"));
-            pnLevel.add(createLevelButton("Medium"));
-            pnLevel.add(createLevelButton("Hard"));
+            pnLevel.add(createLevelButton("Dễ"));
+            pnLevel.add(createLevelButton("Trung Bình"));
+            pnLevel.add(createLevelButton("Khó"));
 
             add(pnLevel, new GridBagConstraints());
 
@@ -69,6 +76,14 @@ public class ChooseLevelPanel extends JPanel {
             btnLevel.setFont(Utils.createDefaultStyle(20));
             btnLevel.setBackground(clVang);
             btnLevel.setForeground(clTrang);
+
+            btnLevel.addActionListener(e -> {
+                chosenLevel = Utils.convertLevelToNumber(level);
+
+                pnCard.add(new SodokuPanel(username, chosenLevel), "SodokuPanel");
+                lyCard.show(pnCard, "SodokuPanel");
+            });
+
             return btnLevel;
         }
     }
