@@ -1,15 +1,112 @@
 package UI;
 
+import helpers.Colors;
+import helpers.Sudoku;
 import helpers.Utils;
 
 import javax.swing.*;
+import java.awt.*;
+
+import static helpers.Colors.clLam;
+import static helpers.Colors.clTrang;
 
 public class SodokuPanel extends JPanel {
+    private static int level;
+
     public SodokuPanel(String username, int level) {
         super();
 
-        String tLevel = Utils.convertNumberToLevel(level);
+        SodokuPanel.level = level;
 
-        add(new JLabel("Hello " + username + ", bạn đang chơi level " + tLevel + "!", JLabel.CENTER));
+        setLayout(new BorderLayout());
+
+        setBackground(Colors.clBe);
+
+        add(new UpPanel(), BorderLayout.NORTH);
+        add(new CenterPanel(), BorderLayout.CENTER);
+    }
+
+    static class UpPanel extends JPanel {
+        public UpPanel() {
+            super();
+
+            setLayout(new BorderLayout());
+
+            JLabel lbTitle = new JLabel("Hãy cố gắng điền hết toàn bộ ô", JLabel.CENTER);
+            lbTitle.setFont(Utils.createDefaultStyle(20));
+            lbTitle.setForeground(clTrang);
+
+            add(lbTitle, BorderLayout.CENTER);
+
+            setBackground(clLam);
+            setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(clLam, 2),
+                    BorderFactory.createEmptyBorder(10, 15, 10, 15)
+            ));
+        }
+    }
+
+    static class CenterPanel extends JPanel {
+        private final JButton[][] board = new JButton[9][9];
+
+        public CenterPanel() {
+            super();
+
+            setLayout(new BorderLayout());
+
+            add(new InformationPanel(), BorderLayout.WEST);
+            add(new BoardPanel(), BorderLayout.CENTER);
+            add(new HelperButtonPanel(), BorderLayout.EAST);
+        }
+
+        static class InformationPanel extends JPanel {
+            public InformationPanel() {
+                super();
+            }
+        }
+
+        class BoardPanel extends JPanel {
+            public BoardPanel() {
+                super();
+
+                setLayout(new GridLayout(3, 3));
+
+                int[][] generated = Sudoku.sudokuGenerator(Utils.convertNumberToRemove(level));
+
+                for (int i = 0; i < 9; i++) {
+                    JPanel pnCon = new JPanel();
+                    pnCon.setLayout(new GridLayout(3, 3));
+
+                    pnCon.setBorder(BorderFactory.createCompoundBorder(
+                            BorderFactory.createLineBorder(clLam, 2),
+                            BorderFactory.createEmptyBorder(2, 2, 2, 2)
+                    ));
+
+                    for (int j = 0; j < 9; j++) {
+                        JButton btn = new JButton();
+                        btn.setFont(Utils.createDefaultStyle(30));
+
+                        int num = generated[i][j];
+
+                        if (num != 0) {
+                            btn.setText(String.valueOf(generated[i][j]));
+                        }
+
+                        btn.setBackground(clTrang);
+
+
+                        board[i][j] = btn;
+
+                        pnCon.add(btn);
+                    }
+
+                    add(pnCon);
+                }
+
+                setBackground(clLam);
+            }
+        }
+
+        static class HelperButtonPanel extends JPanel {}
     }
 }

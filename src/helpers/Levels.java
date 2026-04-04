@@ -8,4 +8,7 @@ public class Levels {
     public static final String MEDIUM = "Trung Bình";
     public static final String HARD = "Khó";
 
+    public static final int REMOVE_EASY = 35;
+    public static final int REMOVE_MEDIUM = 45;
+    public static final int REMOVE_HARD = 52;
 }

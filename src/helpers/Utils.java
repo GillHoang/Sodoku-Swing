@@ -18,4 +18,10 @@ public class Utils {
         else if (level == Levels.LEVEL_MEDIUM) return Levels.MEDIUM;
         return Levels.HARD;
     }
+
+    public static int convertNumberToRemove(int level) {
+        if (level == Levels.LEVEL_EASY) return Levels.REMOVE_EASY;
+        else if (level == Levels.LEVEL_MEDIUM) return Levels.REMOVE_MEDIUM;
+        return Levels.REMOVE_HARD;
+    }
 }
