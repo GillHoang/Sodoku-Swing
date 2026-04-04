@@ -1,10 +1,10 @@
 package UI;
 
+import helpers.Levels;
 import helpers.Utils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Objects;
 
 import static helpers.Colors.*;
 
@@ -63,9 +63,9 @@ public class ChooseLevelPanel extends JPanel {
             lbTitle.setFont(Utils.createDefaultStyle(20));
             pnLevel.add(lbTitle);
 
-            pnLevel.add(createLevelButton("Dễ"));
-            pnLevel.add(createLevelButton("Trung Bình"));
-            pnLevel.add(createLevelButton("Khó"));
+            pnLevel.add(createLevelButton(Levels.EASY));
+            pnLevel.add(createLevelButton(Levels.MEDIUM));
+            pnLevel.add(createLevelButton(Levels.HARD));
 
             add(pnLevel, new GridBagConstraints());
 

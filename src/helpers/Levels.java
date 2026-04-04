@@ -4,4 +4,8 @@ public class Levels {
     public static final int LEVEL_EASY = 1;
     public static final int LEVEL_MEDIUM = 2;
     public static final int LEVEL_HARD = 3;
+    public static final String EASY = "Dễ";
+    public static final String MEDIUM = "Trung Bình";
+    public static final String HARD = "Khó";
+
 }
