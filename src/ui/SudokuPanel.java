@@ -1,14 +1,16 @@
 package ui;
 
+import enity.Cell;
 import helpers.Colors;
 import helpers.Sudoku;
 import helpers.Utils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-import static helpers.Colors.clLam;
-import static helpers.Colors.clTrang;
+import static helpers.Colors.*;
 
 public class SudokuPanel extends JPanel {
     public final int level;
@@ -90,13 +92,17 @@ public class SudokuPanel extends JPanel {
         }
 
         class BoardPanel extends JPanel {
+            public static final JButton[] test = new JButton[81];
+
             public BoardPanel() {
                 super();
 
                 setLayout(new GridLayout(3, 3));
 
-                int[][] generated = Sudoku.sudokuGenerator(Utils.convertNumberToRemove(level));
+                int[][] original = Sudoku.sudokuGenerator();
+                int[] generated = Sudoku.sudokuGenerator(original, Utils.convertNumberToRemove(level));
 
+                int t1 = 0;
                 for (int i = 0; i < 9; i++) {
                     JPanel pnCon = new JPanel();
                     pnCon.setLayout(new GridLayout(3, 3));
@@ -104,17 +110,9 @@ public class SudokuPanel extends JPanel {
                     pnCon.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(clLam, 2), BorderFactory.createEmptyBorder(2, 2, 2, 2)));
 
                     for (int j = 0; j < 9; j++) {
-                        JButton btn = new JButton();
-                        btn.setFont(Utils.createDefaultStyle(30));
-
-                        int num = generated[i][j];
-
-                        if (num != 0) {
-                            btn.setText(String.valueOf(generated[i][j]));
-                        }
-
-                        btn.setBackground(clTrang);
-
+                        JButton btn = getJButton(i, j);
+                        btn.setText(String.valueOf(Sudoku.extract3x3Blocks(generated)[i][ j]));
+                        test[t1++] = btn;
                         pnCon.add(btn);
                     }
 
@@ -122,6 +120,31 @@ public class SudokuPanel extends JPanel {
                 }
 
                 setBackground(clLam);
+            }
+
+            private static JButton getJButton(int row, int col) {
+                JButton btn = new JButton();
+                btn.setFont(Utils.createDefaultStyle(30));
+
+                btn.setBackground(clTrang);
+
+                btn.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        e.getComponent().setBackground(clXam);
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        e.getComponent().setBackground(clTrang);
+                    }
+
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+
+                    }
+                });
+                return btn;
             }
         }
     }
