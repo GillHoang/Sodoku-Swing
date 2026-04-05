@@ -9,13 +9,13 @@ import java.awt.*;
 import static helpers.Colors.*;
 
 public class ChooseLevelPanel extends JPanel {
-    public static String username;
-    public static int chosenLevel = 0;
+    public final String username;
+    private int chosenLevel;
 
     public ChooseLevelPanel(JPanel pnCard, CardLayout lyCard, String username) {
         setLayout(new BorderLayout());
 
-        ChooseLevelPanel.username = username;
+        this.username = username;
 
         add(new UpPanel(), BorderLayout.NORTH);
         add(new CenterPanel(pnCard, lyCard), BorderLayout.CENTER);
@@ -23,11 +23,15 @@ public class ChooseLevelPanel extends JPanel {
         setBackground(clBe);
     }
 
-    static class UpPanel extends JPanel {
+    public void setChosenLevel(int level) {
+        this.chosenLevel = level;
+    }
+
+    class UpPanel extends JPanel {
         public UpPanel() {
             setLayout(new BorderLayout());
 
-            JLabel lbTitle = new JLabel("Xin chào " + username + "! Vui lòng chọn level phù hợp", JLabel.CENTER);
+            JLabel lbTitle = new JLabel("Xin chào " + username + "! Vui lòng chọn level phù hợp", SwingConstants.CENTER);
             lbTitle.setFont(Utils.createDefaultStyle(20));
             lbTitle.setForeground(clTrang);
 
@@ -38,7 +42,7 @@ public class ChooseLevelPanel extends JPanel {
         }
     }
 
-    static class CenterPanel extends JPanel {
+    class CenterPanel extends JPanel {
         private final JPanel pnCard;
         private final CardLayout lyCard;
 
@@ -54,7 +58,7 @@ public class ChooseLevelPanel extends JPanel {
             pnLevel.setBackground(clBe);
             pnLevel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(clLam, 2), BorderFactory.createEmptyBorder(10, 15, 10, 15)));
 
-            JLabel lbTitle = new JLabel("Chọn Level: ", JLabel.CENTER);
+            JLabel lbTitle = new JLabel("Chọn Level: ", SwingConstants.CENTER);
             lbTitle.setFont(Utils.createDefaultStyle(20));
             pnLevel.add(lbTitle);
 
@@ -77,6 +81,8 @@ public class ChooseLevelPanel extends JPanel {
 
                 pnCard.add(new SudokuPanel(username, chosenLevel), "SodokuPanel");
                 lyCard.show(pnCard, "SodokuPanel");
+
+                setChosenLevel(chosenLevel);
             });
 
             return btnLevel;

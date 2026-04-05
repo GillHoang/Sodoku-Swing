@@ -21,7 +21,7 @@ public class LoginPanel extends JPanel {
         public UpPanel() {
             setLayout(new BorderLayout());
 
-            JLabel lbTitle = new JLabel("Chơi Sudoku!", JLabel.CENTER);
+            JLabel lbTitle = new JLabel("Chơi Sudoku!", SwingConstants.CENTER);
             lbTitle.setFont(Utils.createDefaultStyle(34));
             lbTitle.setForeground(clTrang);
 
@@ -88,7 +88,7 @@ public class LoginPanel extends JPanel {
         }
 
         private JLabel getLbDangNhap() {
-            JLabel lbDangNhapTitle = new JLabel("Nhập tên của bạn: ", JLabel.CENTER);
+            JLabel lbDangNhapTitle = new JLabel("Nhập tên của bạn: ", SwingConstants.CENTER);
             lbDangNhapTitle.setFont(Utils.createDefaultStyle(20));
 
             return lbDangNhapTitle;

@@ -11,14 +11,14 @@ import static helpers.Colors.clLam;
 import static helpers.Colors.clTrang;
 
 public class SudokuPanel extends JPanel {
-    private static int level;
-    private static String username;
+    public final int level;
+    public final String username;
 
     public SudokuPanel(String username, int level) {
         super();
 
-        SudokuPanel.level = level;
-        SudokuPanel.username = username;
+        this.level = level;
+        this.username = username;
 
         setLayout(new BorderLayout());
 
@@ -28,13 +28,14 @@ public class SudokuPanel extends JPanel {
         add(new CenterPanel(), BorderLayout.CENTER);
     }
 
-    static class UpPanel extends JPanel {
+    class UpPanel extends JPanel {
         public UpPanel() {
             super();
 
             setLayout(new BorderLayout());
 
-            JLabel lbTitle = new JLabel("Xin chào " + username + ", bạn đã chọn level " + Utils.convertNumberToLevel(level), JLabel.CENTER);
+
+            JLabel lbTitle = new JLabel("Xin chào " + username + ", bạn đã chọn level " + Utils.convertNumberToLevel(level), SwingConstants.CENTER);
             lbTitle.setFont(Utils.createDefaultStyle(20));
             lbTitle.setForeground(clTrang);
 
@@ -45,9 +46,7 @@ public class SudokuPanel extends JPanel {
         }
     }
 
-    static class CenterPanel extends JPanel {
-        private final JButton[][] board = new JButton[9][9];
-
+    class CenterPanel extends JPanel {
         public CenterPanel() {
             super();
 
@@ -115,9 +114,6 @@ public class SudokuPanel extends JPanel {
                         }
 
                         btn.setBackground(clTrang);
-
-
-                        board[i][j] = btn;
 
                         pnCon.add(btn);
                     }

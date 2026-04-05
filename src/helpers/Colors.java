@@ -7,4 +7,7 @@ public class Colors {
     public static final Color clLam = new Color(17, 100, 102);
     public static final Color clTrang = new Color(255, 255, 255);
     public static final Color clVang = new Color(224, 159, 62);
+
+    private Colors() {
+    }
 }

@@ -3,6 +3,11 @@ package helpers;
 import java.util.Random;
 
 public class Sudoku {
+    private static final Random rand = new Random();
+
+    private Sudoku() {
+    }
+
 
     // Returns false if given 3x3 block contains num
     // Ensure the number is not used in the box
@@ -20,7 +25,6 @@ public class Sudoku {
     // Fill a 3x3 matrix
     // Assign valid random numbers to the 3x3 subgrid
     public static void fillBox(int[][] grid, int row, int col) {
-        Random rand = new Random();
         int num;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -105,7 +109,6 @@ public class Sudoku {
     // Remove K digits randomly from the grid
     // This will create a Sudoku puzzle by removing digits
     public static void removeKDigits(int[][] grid, int k) {
-        Random rand = new Random();
         while (k > 0) {
             // Pick a random cell
             int cellId = rand.nextInt(81);

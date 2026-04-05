@@ -24,7 +24,7 @@ public class Main extends JFrame {
 
     private void setup() {
         this.setSize(600, 800);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
