@@ -1,10 +1,14 @@
 package ui;
 
-import helpers.*;
+import helpers.Colors;
+import helpers.Sudoku;
+import helpers.Utils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import static helpers.Colors.*;
 
@@ -12,7 +16,7 @@ public class SudokuPanel extends JPanel {
     public final int level;
     public final String username;
 
-    public SudokuPanel(String username, int level) {
+    public SudokuPanel(JPanel pnCard, CardLayout lyCard, String username, int level) {
         super();
 
         this.level = level;
@@ -23,7 +27,7 @@ public class SudokuPanel extends JPanel {
         setBackground(Colors.clBe);
 
         add(new UpPanel(), BorderLayout.NORTH);
-        add(new CenterPanel(), BorderLayout.CENTER);
+        add(new CenterPanel(pnCard, lyCard), BorderLayout.CENTER);
     }
 
     class UpPanel extends JPanel {
@@ -45,14 +49,14 @@ public class SudokuPanel extends JPanel {
     }
 
     class CenterPanel extends JPanel {
-        public CenterPanel() {
+        public CenterPanel(JPanel pnCard, CardLayout lyCard) {
             super();
 
             setLayout(new BorderLayout());
             setBackground(clLam);
 
             add(new InformationPanel(), BorderLayout.NORTH);
-            add(new BoardPanel(), BorderLayout.CENTER);
+            add(new BoardPanel(pnCard, lyCard), BorderLayout.CENTER);
             add(new NumberButtonPanel(), BorderLayout.SOUTH);
         }
 
@@ -88,14 +92,20 @@ public class SudokuPanel extends JPanel {
         }
 
         class BoardPanel extends JPanel {
-            private final JButton[][] bt = new JButton[9][9];
+            private final JButton[][] buttons = new JButton[9][9];
             private final int[][] grid;
             private final int[][] result;
+            private final JPanel pnCard;
+            private final CardLayout lyCard;
             private int row1;
             private int col1;
+            private int wrongTimes = 0;
 
-            public BoardPanel() {
+            public BoardPanel(JPanel pnCard, CardLayout lyCard) {
                 super();
+
+                this.pnCard = pnCard;
+                this.lyCard = lyCard;
 
                 setLayout(new GridLayout(9, 9));
 
@@ -104,20 +114,21 @@ public class SudokuPanel extends JPanel {
 
                 for (int i = 0; i < 9; i++)
                     for (int j = 0; j < 9; j++) {
-                        bt[i][j] = getJButton(i, j);
-                        this.add(bt[i][j]);
+                        buttons[i][j] = getJButton(i, j);
+                        this.add(buttons[i][j]);
                     }
+
                 for (int i = 0; i < 9; i += 3)
                     for (int j = 0; j < 9; j += 3) {
-                        bt[i][j].setBorder(BorderFactory.createMatteBorder(3, 3, 1, 1, Color.black));
-                        bt[i][j + 2].setBorder(BorderFactory.createMatteBorder(3, 1, 1, 3, Color.black));
-                        bt[i + 2][j + 2].setBorder(BorderFactory.createMatteBorder(1, 1, 3, 3, Color.black));
-                        bt[i + 2][j].setBorder(BorderFactory.createMatteBorder(1, 3, 3, 1, Color.black));
-                        bt[i][j + 1].setBorder(BorderFactory.createMatteBorder(3, 1, 1, 1, Color.black));
-                        bt[i + 1][j + 2].setBorder(BorderFactory.createMatteBorder(1, 1, 1, 3, Color.black));
-                        bt[i + 2][j + 1].setBorder(BorderFactory.createMatteBorder(1, 1, 3, 1, Color.black));
-                        bt[i + 1][j].setBorder(BorderFactory.createMatteBorder(1, 3, 1, 1, Color.black));
-                        bt[i + 1][j + 1].setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black));
+                        buttons[i][j].setBorder(BorderFactory.createMatteBorder(3, 3, 1, 1, Color.black));
+                        buttons[i][j + 2].setBorder(BorderFactory.createMatteBorder(3, 1, 1, 3, Color.black));
+                        buttons[i + 2][j + 2].setBorder(BorderFactory.createMatteBorder(1, 1, 3, 3, Color.black));
+                        buttons[i + 2][j].setBorder(BorderFactory.createMatteBorder(1, 3, 3, 1, Color.black));
+                        buttons[i][j + 1].setBorder(BorderFactory.createMatteBorder(3, 1, 1, 1, Color.black));
+                        buttons[i + 1][j + 2].setBorder(BorderFactory.createMatteBorder(1, 1, 1, 3, Color.black));
+                        buttons[i + 2][j + 1].setBorder(BorderFactory.createMatteBorder(1, 1, 3, 1, Color.black));
+                        buttons[i + 1][j].setBorder(BorderFactory.createMatteBorder(1, 3, 1, 1, Color.black));
+                        buttons[i + 1][j + 1].setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black));
                     }
 
                 setBackground(clLam);
@@ -163,8 +174,8 @@ public class SudokuPanel extends JPanel {
 
             private void highlightSelection(int row, int col) {
                 for (int i = 0; i < 9; i++) {
-                    bt[row][i].setBackground(clXam);
-                    bt[i][col].setBackground(clXam);
+                    buttons[row][i].setBackground(clXam);
+                    buttons[i][col].setBackground(clXam);
                 }
 
                 int value = grid[row][col];
@@ -172,17 +183,17 @@ public class SudokuPanel extends JPanel {
                     for (int i = 0; i < 9; i++) {
                         for (int j = 0; j < 9; j++) {
                             if (grid[i][j] == value) {
-                                bt[i][j].setBackground(clXam);
+                                buttons[i][j].setBackground(clXam);
                             }
                         }
                     }
                 }
 
-                bt[row][col].setBackground(clLam);
+                buttons[row][col].setBackground(clLam);
             }
 
             private void removeBackground() {
-                for (JButton[] jButtons : bt) {
+                for (JButton[] jButtons : buttons) {
                     for (JButton jButton : jButtons) {
                         jButton.setBackground(clTrang);
                     }
@@ -208,7 +219,7 @@ public class SudokuPanel extends JPanel {
                 }
 
                 private boolean isCellEditable(int row, int col) {
-                    Color fg = bt[row][col].getForeground();
+                    Color fg = buttons[row][col].getForeground();
                     return fg != clVang && fg != clDen;
                 }
 
@@ -217,7 +228,7 @@ public class SudokuPanel extends JPanel {
                 }
 
                 private void handleDelete() {
-                    if (!bt[row1][col1].getText().equals(" ")) {
+                    if (!buttons[row1][col1].getText().equals(" ")) {
                         updateCell(row1, col1, 0);
                     }
                 }
@@ -234,13 +245,30 @@ public class SudokuPanel extends JPanel {
 
                 private void updateCell(int row, int col, int value) {
                     grid[row][col] = value;
-                    JButton btn = bt[row][col];
+                    JButton btn = buttons[row][col];
 
                     if (value == 0) {
                         btn.setText(" ");
                         btn.setForeground(null);
                     } else {
                         btn.setText(String.valueOf(value));
+
+                        if (Sudoku.checkDone(grid)) {
+                            pnCard.add(new GoodEnding(), "GoodEnding");
+                            lyCard.show(pnCard, "GoodEnding");
+                            return;
+                        }
+
+                        if (wrongTimes == Utils.MAX_TIMES_WRONG) {
+                            pnCard.add(new BadEnding(), "BadEnding");
+                            lyCard.show(pnCard, "BadEnding");
+                            return;
+                        }
+
+                        if (value != result[row][col]) {
+                            wrongTimes += 1;
+                        }
+
                         btn.setForeground(value == result[row][col] ? clVang : clDo);
                     }
                 }

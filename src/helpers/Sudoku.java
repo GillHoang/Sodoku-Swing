@@ -153,4 +153,13 @@ public class Sudoku {
         removeKDigits(puzzle, k);
         return puzzle;
     }
+
+    public static boolean checkDone(int[][] grid) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (grid[i][j] == 0) return false;
+            }
+        }
+        return true;
+    }
 }
