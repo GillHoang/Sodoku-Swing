@@ -92,7 +92,7 @@ public class SudokuPanel extends JPanel {
 
         class BoardPanel extends JPanel {
             private final JButton[][] bt = new JButton[9][9];
-            private final int[][] gird;
+            private final int[][] grid;
             private final int[][] result;
             private int row1;
             private int col1;
@@ -103,11 +103,11 @@ public class SudokuPanel extends JPanel {
                 setLayout(new GridLayout(9, 9));
 
                 result = Sudoku.sudokuGenerator();
-                gird = Sudoku.createPuzzle(result, Utils.convertNumberToRemove(level));
+                grid = Sudoku.createPuzzle(result, Utils.convertNumberToRemove(level));
 
                 for (int i = 0; i < 9; i++)
                     for (int j = 0; j < 9; j++) {
-                        bt[i][j] = getJButton(gird, i, j);
+                        bt[i][j] = getJButton(grid, i, j);
                         this.add(bt[i][j]);
                     }
                 for (int i = 0; i < 9; i += 3)
@@ -153,10 +153,10 @@ public class SudokuPanel extends JPanel {
                         bt[i][col1].setBackground(clXam);
                     }
 
-                    if (gird[row1][col1] > 0) {
+                    if (this.grid[row1][col1] > 0) {
                         for (i = 0; i < 9; i++)
                             for (j = 0; j < 9; j++)
-                                if (gird[i][j] == gird[row1][col1]) bt[i][j].setBackground(clXam);
+                                if (this.grid[i][j] == this.grid[row1][col1]) bt[i][j].setBackground(clXam);
                     }
 
                     bt[row1][col1].setBackground(clLam);
@@ -173,16 +173,16 @@ public class SudokuPanel extends JPanel {
                             if (bt[row1][col1].getForeground() == clVang || bt[row1][col1].getForeground() == clDen)
                                 return;
 
-                            if (gird[row1][col1] == 0) {
+                            if (BoardPanel.this.grid[row1][col1] == 0) {
                                 grid[row1][col1] = v;
                                 bt[row1][col1].setText(String.valueOf(v));
                                 if (v == result[row1][col1]) bt[row1][col1].setForeground(clVang);
                                 else bt[row1][col1].setForeground(clDo);
-                            } else if (gird[row1][col1] != 0 && v != result[row1][col1]) {
+                            } else if (BoardPanel.this.grid[row1][col1] != 0 && v != result[row1][col1]) {
                                 grid[row1][col1] = v;
                                 bt[row1][col1].setText(String.valueOf(v));
                                 bt[row1][col1].setForeground(clDo);
-                            } else if (gird[row1][col1] != 0 && v == result[row1][col1]) {
+                            } else if (BoardPanel.this.grid[row1][col1] != 0 && v == result[row1][col1]) {
                                 grid[row1][col1] = v;
                                 bt[row1][col1].setText(String.valueOf(v));
                                 bt[row1][col1].setForeground(clVang);
