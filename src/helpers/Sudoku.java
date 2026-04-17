@@ -131,7 +131,7 @@ public class Sudoku {
     }
 
     // Generate a Sudoku grid with K empty cells
-    public static int[][] sudokuGenerator() {
+    public static int[][] sudokuGenerator(boolean remove, int k) {
         // Initialize an empty 9x9 grid
         int[][] grid = new int[9][9];
 
@@ -141,44 +141,8 @@ public class Sudoku {
         // Fill the remaining blocks in the grid
         fillRemaining(grid, 0, 0);
 
+        if (remove) removeKDigits(grid, k);
+
         return grid;
-    }
-
-    public static int[] sudokuGenerator(int[][] grid, int k) {
-        removeKDigits(grid, k);
-
-        return convertGridTo1D(grid);
-    }
-
-    private static int[] convertGridTo1D(int[][] grid) {
-        int[] grid1D = new int[81];
-        for (int i = 0; i < 9; i++) {
-            System.arraycopy(grid[i], 0, grid1D, i * 9, 9);
-        }
-        return grid1D;
-    }
-
-    public static int[][] extract3x3Blocks(int[] flatBoard) {
-        // Khởi tạo mảng 2 chiều: 9 khối, mỗi khối chứa 9 phần tử
-        int[][] blocks = new int[9][9];
-
-        // Mảng phụ để theo dõi xem mỗi khối đã được điền bao nhiêu số
-        int[] countInBlock = new int[9];
-
-        for (int i = 0; i < 81; i++) {
-            int row = i / 9; // Xác định tọa độ hàng (0-8)
-            int col = i % 9; // Xác định tọa độ cột (0-8)
-
-            // Công thức toán học để tìm ra phần tử đang nằm ở khối 3x3 nào (0-8)
-            int blockIndex = (row / 3) * 3 + (col / 3);
-
-            // Đưa phần tử vào đúng khối 3x3 của nó
-            blocks[blockIndex][countInBlock[blockIndex]] = flatBoard[i];
-
-            // Tăng biến đếm của khối đó lên 1
-            countInBlock[blockIndex]++;
-        }
-
-        return blocks;
     }
 }

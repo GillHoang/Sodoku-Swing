@@ -1,6 +1,5 @@
 package ui;
 
-import enity.Cell;
 import helpers.Colors;
 import helpers.Sudoku;
 import helpers.Utils;
@@ -92,39 +91,50 @@ public class SudokuPanel extends JPanel {
         }
 
         class BoardPanel extends JPanel {
-            public static final JButton[] test = new JButton[81];
+            public final JButton[][] bt = new JButton[9][9];
 
             public BoardPanel() {
                 super();
 
-                setLayout(new GridLayout(3, 3));
+                setLayout(new GridLayout(9, 9));
 
-                int[][] original = Sudoku.sudokuGenerator();
-                int[] generated = Sudoku.sudokuGenerator(original, Utils.convertNumberToRemove(level));
+                int numberToRemove = Utils.convertNumberToRemove(level);
+                int[][] original = Sudoku.sudokuGenerator(false, numberToRemove);
+                int[][] grid = Sudoku.sudokuGenerator(true, numberToRemove);
 
-                int t1 = 0;
-                for (int i = 0; i < 9; i++) {
-                    JPanel pnCon = new JPanel();
-                    pnCon.setLayout(new GridLayout(3, 3));
 
-                    pnCon.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(clLam, 2), BorderFactory.createEmptyBorder(2, 2, 2, 2)));
-
+                for (int i = 0; i < 9; i++)
                     for (int j = 0; j < 9; j++) {
-                        JButton btn = getJButton(i, j);
-                        btn.setText(String.valueOf(Sudoku.extract3x3Blocks(generated)[i][ j]));
-                        test[t1++] = btn;
-                        pnCon.add(btn);
+                        bt[i][j] = getJButton(grid, i, j);
+                        this.add(bt[i][j]);
                     }
-
-                    add(pnCon);
-                }
+                for (int i = 0; i < 9; i += 3)
+                    for (int j = 0; j < 9; j += 3) {
+                        bt[i][j].setBorder(BorderFactory.createMatteBorder(3, 3, 1, 1, Color.black));
+                        bt[i][j + 2].setBorder(BorderFactory.createMatteBorder(3, 1, 1, 3, Color.black));
+                        bt[i + 2][j + 2].setBorder(BorderFactory.createMatteBorder(1, 1, 3, 3, Color.black));
+                        bt[i + 2][j].setBorder(BorderFactory.createMatteBorder(1, 3, 3, 1, Color.black));
+                        bt[i][j + 1].setBorder(BorderFactory.createMatteBorder(3, 1, 1, 1, Color.black));
+                        bt[i + 1][j + 2].setBorder(BorderFactory.createMatteBorder(1, 1, 1, 3, Color.black));
+                        bt[i + 2][j + 1].setBorder(BorderFactory.createMatteBorder(1, 1, 3, 1, Color.black));
+                        bt[i + 1][j].setBorder(BorderFactory.createMatteBorder(1, 3, 1, 1, Color.black));
+                        bt[i + 1][j + 1].setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black));
+                    }
 
                 setBackground(clLam);
             }
 
-            private static JButton getJButton(int row, int col) {
+            private static JButton getJButton(int[][] grid, int row, int col) {
                 JButton btn = new JButton();
                 btn.setFont(Utils.createDefaultStyle(30));
+
+                if (grid[row][col] == 0) {
+                    btn.setText(" ");
+                } else {
+                    btn.setText(String.valueOf(grid[row][col]));
+                }
+                btn.setActionCommand(row + " " + col);
+
 
                 btn.setBackground(clTrang);
 
