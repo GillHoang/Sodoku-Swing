@@ -1,7 +1,6 @@
 package ui;
 
-import helpers.Levels;
-import helpers.Utils;
+import helpers.*;
 
 import javax.swing.*;
 import java.awt.*;
