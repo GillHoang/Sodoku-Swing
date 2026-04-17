@@ -131,7 +131,7 @@ public class Sudoku {
     }
 
     // Generate a Sudoku grid with K empty cells
-    public static int[][] sudokuGenerator(boolean remove, int k) {
+    public static int[][] sudokuGenerator() {
         // Initialize an empty 9x9 grid
         int[][] grid = new int[9][9];
 
@@ -141,8 +141,16 @@ public class Sudoku {
         // Fill the remaining blocks in the grid
         fillRemaining(grid, 0, 0);
 
-        if (remove) removeKDigits(grid, k);
-
         return grid;
+    }
+
+    public static int[][] createPuzzle(int[][] fullGrid, int k) {
+        int[][] puzzle = new int[9][9];
+        for (int i = 0; i < 9; i++) {
+            System.arraycopy(fullGrid[i], 0, puzzle[i], 0, 9);  // copy nhanh và an toàn
+        }
+
+        removeKDigits(puzzle, k);
+        return puzzle;
     }
 }

@@ -6,8 +6,8 @@ import helpers.Utils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import static helpers.Colors.*;
 
@@ -91,21 +91,23 @@ public class SudokuPanel extends JPanel {
         }
 
         class BoardPanel extends JPanel {
-            public final JButton[][] bt = new JButton[9][9];
+            private final JButton[][] bt = new JButton[9][9];
+            private final int[][] gird;
+            private final int[][] result;
+            private int row1;
+            private int col1;
 
             public BoardPanel() {
                 super();
 
                 setLayout(new GridLayout(9, 9));
 
-                int numberToRemove = Utils.convertNumberToRemove(level);
-                int[][] original = Sudoku.sudokuGenerator(false, numberToRemove);
-                int[][] grid = Sudoku.sudokuGenerator(true, numberToRemove);
-
+                result = Sudoku.sudokuGenerator();
+                gird = Sudoku.createPuzzle(result, Utils.convertNumberToRemove(level));
 
                 for (int i = 0; i < 9; i++)
                     for (int j = 0; j < 9; j++) {
-                        bt[i][j] = getJButton(grid, i, j);
+                        bt[i][j] = getJButton(gird, i, j);
                         this.add(bt[i][j]);
                     }
                 for (int i = 0; i < 9; i += 3)
@@ -124,37 +126,80 @@ public class SudokuPanel extends JPanel {
                 setBackground(clLam);
             }
 
-            private static JButton getJButton(int[][] grid, int row, int col) {
+            public JButton getJButton(int[][] grid, int row, int col) {
                 JButton btn = new JButton();
                 btn.setFont(Utils.createDefaultStyle(30));
+                btn.setBackground(clTrang);
 
                 if (grid[row][col] == 0) {
                     btn.setText(" ");
+                    btn.setForeground(null);
                 } else {
                     btn.setText(String.valueOf(grid[row][col]));
+                    btn.setForeground(clDen);
                 }
                 btn.setActionCommand(row + " " + col);
+                btn.addActionListener(e -> {
+                    removeBackground();
+                    String s = e.getActionCommand();
+                    int k = s.indexOf(32);
+                    int i = Integer.parseInt(s.substring(0, k));
+                    int j = Integer.parseInt(s.substring(k + 1));
+                    row1 = i;
+                    col1 = j;
 
-
-                btn.setBackground(clTrang);
-
-                btn.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseEntered(MouseEvent e) {
-                        e.getComponent().setBackground(clXam);
+                    for (i = 0; i < 9; i++) {
+                        bt[row1][i].setBackground(clXam);
+                        bt[i][col1].setBackground(clXam);
                     }
 
-                    @Override
-                    public void mouseExited(MouseEvent e) {
-                        e.getComponent().setBackground(clTrang);
+                    if (gird[row1][col1] > 0) {
+                        for (i = 0; i < 9; i++)
+                            for (j = 0; j < 9; j++)
+                                if (gird[i][j] == gird[row1][col1]) bt[i][j].setBackground(clXam);
                     }
 
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
+                    bt[row1][col1].setBackground(clLam);
+                });
 
+                btn.addKeyListener(new KeyAdapter() {
+                    @Override
+                    public void keyPressed(KeyEvent e) {
+                        int v = e.getKeyCode();
+                        if ((v >= 49 && v <= 57) || (v >= 97 && v <= 105)) {
+                            if (v <= 57) v -= 48;
+                            if (v >= 97) v -= 96;
+
+                            if (bt[row1][col1].getForeground() == clVang || bt[row1][col1].getForeground() == clDen)
+                                return;
+
+                            if (gird[row1][col1] == 0) {
+                                grid[row1][col1] = v;
+                                bt[row1][col1].setText(String.valueOf(v));
+                                if (v == result[row1][col1]) bt[row1][col1].setForeground(clVang);
+                                else bt[row1][col1].setForeground(clDo);
+                            } else if (gird[row1][col1] != 0 && v != result[row1][col1]) {
+                                grid[row1][col1] = v;
+                                bt[row1][col1].setText(String.valueOf(v));
+                                bt[row1][col1].setForeground(clDo);
+                            } else if (gird[row1][col1] != 0 && v == result[row1][col1]) {
+                                grid[row1][col1] = v;
+                                bt[row1][col1].setText(String.valueOf(v));
+                                bt[row1][col1].setForeground(clVang);
+                            }
+                        }
                     }
                 });
+
                 return btn;
+            }
+
+            private void removeBackground() {
+                for (JButton[] jButtons : bt) {
+                    for (JButton jButton : jButtons) {
+                        jButton.setBackground(clTrang);
+                    }
+                }
             }
         }
     }
