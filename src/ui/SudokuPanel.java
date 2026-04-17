@@ -1,13 +1,10 @@
 package ui;
 
-import helpers.Colors;
-import helpers.Sudoku;
-import helpers.Utils;
+import helpers.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
 import static helpers.Colors.*;
 
@@ -107,7 +104,7 @@ public class SudokuPanel extends JPanel {
 
                 for (int i = 0; i < 9; i++)
                     for (int j = 0; j < 9; j++) {
-                        bt[i][j] = getJButton(grid, i, j);
+                        bt[i][j] = getJButton(i, j);
                         this.add(bt[i][j]);
                     }
                 for (int i = 0; i < 9; i += 3)
@@ -126,11 +123,22 @@ public class SudokuPanel extends JPanel {
                 setBackground(clLam);
             }
 
-            public JButton getJButton(int[][] grid, int row, int col) {
+            public JButton getJButton(int row, int col) {
                 JButton btn = new JButton();
                 btn.setFont(Utils.createDefaultStyle(30));
                 btn.setBackground(clTrang);
 
+                initializeButtonAppearance(btn, row, col);
+
+                btn.setActionCommand(row + " " + col);
+                btn.addActionListener(this::handleCellSelection);
+
+                btn.addKeyListener(new SudokuKeyListener());
+
+                return btn;
+            }
+
+            private void initializeButtonAppearance(JButton btn, int row, int col) {
                 if (grid[row][col] == 0) {
                     btn.setText(" ");
                     btn.setForeground(null);
@@ -138,66 +146,102 @@ public class SudokuPanel extends JPanel {
                     btn.setText(String.valueOf(grid[row][col]));
                     btn.setForeground(clDen);
                 }
-                btn.setActionCommand(row + " " + col);
-                btn.addActionListener(e -> {
-                    removeBackground();
-                    String s = e.getActionCommand();
-                    int k = s.indexOf(32);
-                    int i = Integer.parseInt(s.substring(0, k));
-                    int j = Integer.parseInt(s.substring(k + 1));
-                    row1 = i;
-                    col1 = j;
+            }
 
-                    for (i = 0; i < 9; i++) {
-                        bt[row1][i].setBackground(clXam);
-                        bt[i][col1].setBackground(clXam);
-                    }
+            private void handleCellSelection(ActionEvent e) {
+                removeBackground();
 
-                    if (this.grid[row1][col1] > 0) {
-                        for (i = 0; i < 9; i++)
-                            for (j = 0; j < 9; j++)
-                                if (this.grid[i][j] == this.grid[row1][col1]) bt[i][j].setBackground(clXam);
-                    }
+                String[] coords = e.getActionCommand().split(" ");
+                int r = Integer.parseInt(coords[0]);
+                int c = Integer.parseInt(coords[1]);
 
-                    bt[row1][col1].setBackground(clLam);
-                });
+                row1 = r;
+                col1 = c;
 
-                btn.addKeyListener(new KeyAdapter() {
-                    @Override
-                    public void keyPressed(KeyEvent e) {
-                        int v = e.getKeyCode();
-                        if ((v >= 49 && v <= 57) || (v >= 97 && v <= 105)) {
-                            if (v <= 57) v -= 48;
-                            if (v >= 97) v -= 96;
+                highlightSelection(r, c);
+            }
 
-                            if (bt[row1][col1].getForeground() == clVang || bt[row1][col1].getForeground() == clDen)
-                                return;
+            private void highlightSelection(int row, int col) {
+                for (int i = 0; i < 9; i++) {
+                    bt[row][i].setBackground(clXam);
+                    bt[i][col].setBackground(clXam);
+                }
 
-                            if (BoardPanel.this.grid[row1][col1] == 0) {
-                                grid[row1][col1] = v;
-                                bt[row1][col1].setText(String.valueOf(v));
-                                if (v == result[row1][col1]) bt[row1][col1].setForeground(clVang);
-                                else bt[row1][col1].setForeground(clDo);
-                            } else if (BoardPanel.this.grid[row1][col1] != 0 && v != result[row1][col1]) {
-                                grid[row1][col1] = v;
-                                bt[row1][col1].setText(String.valueOf(v));
-                                bt[row1][col1].setForeground(clDo);
-                            } else if (BoardPanel.this.grid[row1][col1] != 0 && v == result[row1][col1]) {
-                                grid[row1][col1] = v;
-                                bt[row1][col1].setText(String.valueOf(v));
-                                bt[row1][col1].setForeground(clVang);
+                int value = grid[row][col];
+                if (value > 0) {
+                    for (int i = 0; i < 9; i++) {
+                        for (int j = 0; j < 9; j++) {
+                            if (grid[i][j] == value) {
+                                bt[i][j].setBackground(clXam);
                             }
                         }
                     }
-                });
+                }
 
-                return btn;
+                bt[row][col].setBackground(clLam);
             }
 
             private void removeBackground() {
                 for (JButton[] jButtons : bt) {
                     for (JButton jButton : jButtons) {
                         jButton.setBackground(clTrang);
+                    }
+                }
+            }
+
+            private class SudokuKeyListener extends KeyAdapter {
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    if (!isCellEditable(row1, col1)) return;
+
+                    int keyCode = e.getKeyCode();
+
+                    if (isDeleteKey(keyCode)) {
+                        handleDelete();
+                        return;
+                    }
+
+                    int number = parseNumberInput(keyCode);
+                    if (number >= 1 && number <= 9) {
+                        updateCell(row1, col1, number);
+                    }
+                }
+
+                private boolean isCellEditable(int row, int col) {
+                    Color fg = bt[row][col].getForeground();
+                    return fg != clVang && fg != clDen;
+                }
+
+                private boolean isDeleteKey(int keyCode) {
+                    return keyCode == KeyEvent.VK_BACK_SPACE || keyCode == KeyEvent.VK_DELETE;
+                }
+
+                private void handleDelete() {
+                    if (!bt[row1][col1].getText().equals(" ")) {
+                        updateCell(row1, col1, 0);
+                    }
+                }
+
+                private int parseNumberInput(int keyCode) {
+                    if (keyCode >= KeyEvent.VK_1 && keyCode <= KeyEvent.VK_9) {
+                        return keyCode - KeyEvent.VK_0;
+                    }
+                    if (keyCode >= KeyEvent.VK_NUMPAD1 && keyCode <= KeyEvent.VK_NUMPAD9) {
+                        return keyCode - KeyEvent.VK_NUMPAD0;
+                    }
+                    return 0;
+                }
+
+                private void updateCell(int row, int col, int value) {
+                    grid[row][col] = value;
+                    JButton btn = bt[row][col];
+
+                    if (value == 0) {
+                        btn.setText(" ");
+                        btn.setForeground(null);
+                    } else {
+                        btn.setText(String.valueOf(value));
+                        btn.setForeground(value == result[row][col] ? clVang : clDo);
                     }
                 }
             }
