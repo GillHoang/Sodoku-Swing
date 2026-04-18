@@ -13,20 +13,20 @@ public class Utils {
     }
 
     public static int convertLevelToNumber(String level) {
-        if (level.equals(Levels.EASY)) return Levels.LEVEL_EASY;
-        else if (level.equals(Levels.MEDIUM)) return Levels.LEVEL_MEDIUM;
-        else return Levels.LEVEL_HARD;
+        if (level.equals(Levels.EASY.name())) return Levels.EASY.value();
+        else if (level.equals(Levels.MEDIUM.name())) return Levels.MEDIUM.value();
+        else return Levels.EASY.value();
     }
 
     public static String convertNumberToLevel(int level) {
-        if (level == Levels.LEVEL_EASY) return Levels.EASY;
-        else if (level == Levels.LEVEL_MEDIUM) return Levels.MEDIUM;
-        return Levels.HARD;
+        if (level == Levels.EASY.value()) return Levels.EASY.name();
+        else if (level == Levels.MEDIUM.value()) return Levels.MEDIUM.name();
+        return Levels.HARD.name();
     }
 
     public static int convertNumberToRemove(int level) {
-        if (level == Levels.LEVEL_EASY) return Levels.REMOVE_EASY;
-        else if (level == Levels.LEVEL_MEDIUM) return Levels.REMOVE_MEDIUM;
-        return Levels.REMOVE_HARD;
+        if (level == Levels.EASY.value()) return Levels.EASY.removeParts();
+        else if (level == Levels.MEDIUM.value()) return Levels.MEDIUM.removeParts();
+        return Levels.HARD.removeParts();
     }
 }

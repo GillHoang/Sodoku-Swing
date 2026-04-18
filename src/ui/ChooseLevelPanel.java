@@ -61,9 +61,7 @@ public class ChooseLevelPanel extends JPanel {
             lbTitle.setFont(Utils.createDefaultStyle(20));
             pnLevel.add(lbTitle);
 
-            pnLevel.add(createLevelButton(Levels.EASY));
-            pnLevel.add(createLevelButton(Levels.MEDIUM));
-            pnLevel.add(createLevelButton(Levels.HARD));
+            Levels.LEVEL_LIST.forEach(level -> pnLevel.add(createLevelButton(level.name())));
 
             add(pnLevel, new GridBagConstraints());
 

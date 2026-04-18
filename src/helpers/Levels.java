@@ -1,15 +1,14 @@
 package helpers;
 
+import enity.Level;
+
+import java.util.List;
+
 public class Levels {
-    public static final int LEVEL_EASY = 1;
-    public static final int LEVEL_MEDIUM = 2;
-    public static final int LEVEL_HARD = 3;
-    public static final String EASY = "Dễ";
-    public static final String MEDIUM = "Trung Bình";
-    public static final String HARD = "Khó";
-    public static final int REMOVE_EASY = 35;
-    public static final int REMOVE_MEDIUM = 45;
-    public static final int REMOVE_HARD = 52;
+    public static final Level EASY = new Level(1, "Easy", 35);
+    public static final Level MEDIUM = new Level(2, "Medium", 45);
+    public static final Level HARD = new Level(3, "Hard", 52);
+    public static final List<Level> LEVEL_LIST = List.of(EASY, MEDIUM, HARD);
 
     private Levels() {
     }
