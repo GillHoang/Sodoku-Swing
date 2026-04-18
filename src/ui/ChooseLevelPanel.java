@@ -1,6 +1,8 @@
 package ui;
 
-import helpers.*;
+import helpers.Levels;
+import helpers.Utils;
+import main.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,13 +10,10 @@ import java.awt.*;
 import static helpers.Colors.*;
 
 public class ChooseLevelPanel extends JPanel {
-    public final String username;
-    private int chosenLevel;
+    public final String username = Main.STATE.getUsername();
 
-    public ChooseLevelPanel(JPanel pnCard, CardLayout lyCard, String username) {
+    public ChooseLevelPanel(JPanel pnCard, CardLayout lyCard) {
         setLayout(new BorderLayout());
-
-        this.username = username;
 
         add(new UpPanel(), BorderLayout.NORTH);
         add(new CenterPanel(pnCard, lyCard), BorderLayout.CENTER);
@@ -22,26 +21,7 @@ public class ChooseLevelPanel extends JPanel {
         setBackground(clBe);
     }
 
-    public void setChosenLevel(int level) {
-        this.chosenLevel = level;
-    }
-
-    class UpPanel extends JPanel {
-        public UpPanel() {
-            setLayout(new BorderLayout());
-
-            JLabel lbTitle = new JLabel("Xin chào " + username + "! Vui lòng chọn level phù hợp", SwingConstants.CENTER);
-            lbTitle.setFont(Utils.createDefaultStyle(20));
-            lbTitle.setForeground(clTrang);
-
-            add(lbTitle, BorderLayout.CENTER);
-
-            setBackground(clLam);
-            setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(clLam, 2), BorderFactory.createEmptyBorder(10, 15, 10, 15)));
-        }
-    }
-
-    class CenterPanel extends JPanel {
+    static class CenterPanel extends JPanel {
         private final JPanel pnCard;
         private final CardLayout lyCard;
 
@@ -74,15 +54,28 @@ public class ChooseLevelPanel extends JPanel {
             btnLevel.setForeground(clTrang);
 
             btnLevel.addActionListener(e -> {
-                chosenLevel = Utils.convertLevelToNumber(level);
+                Main.STATE.setLevel(Utils.convertLevelToNumber(level));
 
-                pnCard.add(new SudokuPanel(pnCard, lyCard, username, chosenLevel), "SodokuPanel");
+                pnCard.add(new SudokuPanel(pnCard, lyCard), "SodokuPanel");
                 lyCard.show(pnCard, "SodokuPanel");
-
-                setChosenLevel(chosenLevel);
             });
 
             return btnLevel;
+        }
+    }
+
+    class UpPanel extends JPanel {
+        public UpPanel() {
+            setLayout(new BorderLayout());
+
+            JLabel lbTitle = new JLabel("Xin chào " + username + "! Vui lòng chọn level phù hợp", SwingConstants.CENTER);
+            lbTitle.setFont(Utils.createDefaultStyle(20));
+            lbTitle.setForeground(clTrang);
+
+            add(lbTitle, BorderLayout.CENTER);
+
+            setBackground(clLam);
+            setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(clLam, 2), BorderFactory.createEmptyBorder(10, 15, 10, 15)));
         }
     }
 }

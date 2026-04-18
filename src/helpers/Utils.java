@@ -15,7 +15,7 @@ public class Utils {
     public static int convertLevelToNumber(String level) {
         if (level.equals(Levels.EASY.name())) return Levels.EASY.value();
         else if (level.equals(Levels.MEDIUM.name())) return Levels.MEDIUM.value();
-        else return Levels.EASY.value();
+        else return Levels.HARD.value();
     }
 
     public static String convertNumberToLevel(int level) {

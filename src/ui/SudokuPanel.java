@@ -3,6 +3,7 @@ package ui;
 import helpers.Colors;
 import helpers.Sudoku;
 import helpers.Utils;
+import main.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,14 +14,11 @@ import java.awt.event.KeyEvent;
 import static helpers.Colors.*;
 
 public class SudokuPanel extends JPanel {
-    public final int level;
-    public final String username;
+    public final int level = Main.STATE.getLevel();
+    public final String username = Main.STATE.getUsername();
 
-    public SudokuPanel(JPanel pnCard, CardLayout lyCard, String username, int level) {
+    public SudokuPanel(JPanel pnCard, CardLayout lyCard) {
         super();
-
-        this.level = level;
-        this.username = username;
 
         setLayout(new BorderLayout());
 
@@ -30,25 +28,7 @@ public class SudokuPanel extends JPanel {
         add(new CenterPanel(pnCard, lyCard), BorderLayout.CENTER);
     }
 
-    class UpPanel extends JPanel {
-        public UpPanel() {
-            super();
-
-            setLayout(new BorderLayout());
-
-
-            JLabel lbTitle = new JLabel("Xin chào " + username + ", bạn đã chọn level " + Utils.convertNumberToLevel(level), SwingConstants.CENTER);
-            lbTitle.setFont(Utils.createDefaultStyle(20));
-            lbTitle.setForeground(clTrang);
-
-            add(lbTitle, BorderLayout.CENTER);
-
-            setBackground(clLam);
-            setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(clLam, 2), BorderFactory.createEmptyBorder(10, 15, 10, 15)));
-        }
-    }
-
-    class CenterPanel extends JPanel {
+    static class CenterPanel extends JPanel {
         public CenterPanel(JPanel pnCard, CardLayout lyCard) {
             super();
 
@@ -91,26 +71,26 @@ public class SudokuPanel extends JPanel {
             }
         }
 
-        class BoardPanel extends JPanel {
+        static class BoardPanel extends JPanel {
             private final JButton[][] buttons = new JButton[9][9];
-            private final int[][] grid;
-            private final int[][] result;
+            private final int[][] board;
+            private final int[][] solution;
             private final JPanel pnCard;
             private final CardLayout lyCard;
             private int row1;
             private int col1;
-            private int wrongTimes = 0;
 
             public BoardPanel(JPanel pnCard, CardLayout lyCard) {
                 super();
+
+                Main.STATE.init();
+                board = Main.STATE.getBoard();
+                solution = Main.STATE.getSolution();
 
                 this.pnCard = pnCard;
                 this.lyCard = lyCard;
 
                 setLayout(new GridLayout(9, 9));
-
-                result = Sudoku.sudokuGenerator();
-                grid = Sudoku.createPuzzle(result, Utils.convertNumberToRemove(level));
 
                 for (int i = 0; i < 9; i++)
                     for (int j = 0; j < 9; j++) {
@@ -150,11 +130,11 @@ public class SudokuPanel extends JPanel {
             }
 
             private void initializeButtonAppearance(JButton btn, int row, int col) {
-                if (grid[row][col] == 0) {
+                if (board[row][col] == 0) {
                     btn.setText(" ");
                     btn.setForeground(null);
                 } else {
-                    btn.setText(String.valueOf(grid[row][col]));
+                    btn.setText(String.valueOf(board[row][col]));
                     btn.setForeground(clDen);
                 }
             }
@@ -178,11 +158,11 @@ public class SudokuPanel extends JPanel {
                     buttons[i][col].setBackground(clXam);
                 }
 
-                int value = grid[row][col];
+                int value = board[row][col];
                 if (value > 0) {
                     for (int i = 0; i < 9; i++) {
                         for (int j = 0; j < 9; j++) {
-                            if (grid[i][j] == value) {
+                            if (board[i][j] == value) {
                                 buttons[i][j].setBackground(clXam);
                             }
                         }
@@ -244,35 +224,59 @@ public class SudokuPanel extends JPanel {
                 }
 
                 private void updateCell(int row, int col, int value) {
-                    grid[row][col] = value;
+                    if (Main.STATE.isCompleted()) return;
+
+                    board[row][col] = value;
                     JButton btn = buttons[row][col];
 
                     if (value == 0) {
                         btn.setText(" ");
                         btn.setForeground(null);
                     } else {
+                        int mistakes = Main.STATE.getMistakes();
+
                         btn.setText(String.valueOf(value));
 
-                        if (Sudoku.checkDone(grid)) {
+                        if (Sudoku.checkDone(board)) {
                             pnCard.add(new GoodEnding(), "GoodEnding");
                             lyCard.show(pnCard, "GoodEnding");
+
+                            Main.STATE.setCompleted(true);
+
                             return;
                         }
 
-                        if (wrongTimes == Utils.MAX_TIMES_WRONG) {
+                        if (mistakes == Utils.MAX_TIMES_WRONG) {
                             pnCard.add(new BadEnding(), "BadEnding");
                             lyCard.show(pnCard, "BadEnding");
                             return;
                         }
 
-                        if (value != result[row][col]) {
-                            wrongTimes += 1;
+                        if (value != solution[row][col]) {
+                            Main.STATE.incrementMistakes();
                         }
 
-                        btn.setForeground(value == result[row][col] ? clVang : clDo);
+                        btn.setForeground(value == solution[row][col] ? clVang : clDo);
                     }
                 }
             }
+        }
+    }
+
+    class UpPanel extends JPanel {
+        public UpPanel() {
+            super();
+
+            setLayout(new BorderLayout());
+
+            JLabel lbTitle = new JLabel("Xin chào " + username + ", bạn đã chọn level " + Utils.convertNumberToLevel(level), SwingConstants.CENTER);
+            lbTitle.setFont(Utils.createDefaultStyle(20));
+            lbTitle.setForeground(clTrang);
+
+            add(lbTitle, BorderLayout.CENTER);
+
+            setBackground(clLam);
+            setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(clLam, 2), BorderFactory.createEmptyBorder(10, 15, 10, 15)));
         }
     }
 }

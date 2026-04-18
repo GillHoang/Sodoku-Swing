@@ -1,13 +1,15 @@
 package main;
 
+import state.GameState;
 import ui.LoginPanel;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class Main extends JFrame {
+    public static final GameState STATE = GameState.getInstance();
     public Main() {
-        super("Sodoku");
+        super("Sudoku");
 
         JPanel cardPanel = new JPanel();
         CardLayout cardLayout = new CardLayout();

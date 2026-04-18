@@ -1,6 +1,7 @@
 package ui;
 
 import helpers.Utils;
+import main.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -72,7 +73,9 @@ public class LoginPanel extends JPanel {
 
                 username = input;
 
-                pnCard.add(new ChooseLevelPanel(pnCard, lyCard, username), "chooseLevel");
+                Main.STATE.setUsername(username);
+
+                pnCard.add(new ChooseLevelPanel(pnCard, lyCard), "chooseLevel");
                 lyCard.show(pnCard, "chooseLevel");
             });
 
