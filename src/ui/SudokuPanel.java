@@ -4,6 +4,8 @@ import helpers.Colors;
 import helpers.Sudoku;
 import helpers.Utils;
 import main.Main;
+import ui.ending.BadEnding;
+import ui.ending.GoodEnding;
 
 import javax.swing.*;
 import java.awt.*;
