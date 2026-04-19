@@ -6,8 +6,6 @@ import javax.swing.*;
 import java.awt.*;
 
 import static helpers.Colors.*;
-import static helpers.Colors.clBe;
-import static helpers.Colors.clVang;
 
 public class GoodEnding extends JPanel {
     public GoodEnding() {

@@ -8,6 +8,7 @@ import java.awt.*;
 
 public class Main extends JFrame {
     public static final GameState STATE = GameState.getInstance();
+
     public Main() {
         super("Sudoku");
 
