@@ -4,7 +4,6 @@ import state.GameState;
 import ui.LoginPanel;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class Main extends JFrame {
     public static final GameState STATE = GameState.getInstance();
@@ -12,13 +11,9 @@ public class Main extends JFrame {
     public Main() {
         super("Sudoku");
 
-        JPanel cardPanel = new JPanel();
-        CardLayout cardLayout = new CardLayout();
-        cardPanel.setLayout(cardLayout);
+        STATE.getPnCard().add(new LoginPanel(), "login");
 
-        cardPanel.add(new LoginPanel(cardPanel, cardLayout), "login");
-
-        this.add(cardPanel);
+        this.add(STATE.getPnCard());
 
         setup();
     }

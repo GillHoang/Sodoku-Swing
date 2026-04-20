@@ -3,6 +3,9 @@ package state;
 import helpers.Sudoku;
 import helpers.Utils;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class GameState {
     private static GameState instance;
     private int level;
@@ -12,12 +15,18 @@ public class GameState {
     private int[][] solution;
     private long startTime;
     private String username;
+    private final JPanel pnCard;
+    private final CardLayout lyCard;
 
     private GameState() {
         solution = new int[9][9];
         board = new int[9][9];
         mistakes = 0;
         isCompleted = false;
+
+        pnCard = new JPanel();
+        lyCard = new CardLayout();
+        pnCard.setLayout(lyCard);
     }
 
     public static GameState getInstance() {
@@ -79,5 +88,13 @@ public class GameState {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public JPanel getPnCard() {
+        return pnCard;
+    }
+
+    public CardLayout getLyCard() {
+        return lyCard;
     }
 }

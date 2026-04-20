@@ -9,11 +9,11 @@ import java.awt.*;
 import static helpers.Colors.*;
 
 public class LoginPanel extends JPanel {
-    public LoginPanel(JPanel pnCard, CardLayout lyCard) {
+    public LoginPanel() {
         setLayout(new BorderLayout());
 
         add(new UpPanel(), BorderLayout.NORTH);
-        add(new CenterPanel(pnCard, lyCard), BorderLayout.CENTER);
+        add(new CenterPanel(), BorderLayout.CENTER);
 
         setBackground(clBe);
     }
@@ -36,7 +36,7 @@ public class LoginPanel extends JPanel {
     static class CenterPanel extends JPanel {
         private String username;
 
-        public CenterPanel(JPanel pnCard, CardLayout lyCard) {
+        public CenterPanel() {
             setLayout(new GridBagLayout());
             setBackground(clBe);
 
@@ -48,7 +48,7 @@ public class LoginPanel extends JPanel {
 
             JTextField tfUserName = getTfUsername();
 
-            JButton btnDangNhap = getBtnDangNhap(pnCard, lyCard, tfUserName);
+            JButton btnDangNhap = getBtnDangNhap(tfUserName);
 
             pnContent.add(lbDangNhap, BorderLayout.NORTH);
             pnContent.add(tfUserName, BorderLayout.CENTER);
@@ -59,7 +59,7 @@ public class LoginPanel extends JPanel {
             add(pnContent, new GridBagConstraints());
         }
 
-        private JButton getBtnDangNhap(JPanel pnCard, CardLayout lyCard, JTextField tfUserName) {
+        private JButton getBtnDangNhap(JTextField tfUserName) {
             JButton bthDangNhap = new JButton("Bắt đầu chơi");
             bthDangNhap.setFont(Utils.createDefaultStyle(20));
             bthDangNhap.setBackground(clVang);
@@ -75,8 +75,8 @@ public class LoginPanel extends JPanel {
 
                 Main.STATE.setUsername(username);
 
-                pnCard.add(new ChooseLevelPanel(pnCard, lyCard), "chooseLevel");
-                lyCard.show(pnCard, "chooseLevel");
+                Main.STATE.getPnCard().add(new ChooseLevelPanel(), "chooseLevel");
+                Main.STATE.getLyCard().show(Main.STATE.getPnCard(), "chooseLevel");
             });
 
             return bthDangNhap;

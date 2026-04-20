@@ -12,23 +12,17 @@ import static helpers.Colors.*;
 public class ChooseLevelPanel extends JPanel {
     public final String username = Main.STATE.getUsername();
 
-    public ChooseLevelPanel(JPanel pnCard, CardLayout lyCard) {
+    public ChooseLevelPanel() {
         setLayout(new BorderLayout());
 
         add(new UpPanel(), BorderLayout.NORTH);
-        add(new CenterPanel(pnCard, lyCard), BorderLayout.CENTER);
+        add(new CenterPanel(), BorderLayout.CENTER);
 
         setBackground(clBe);
     }
 
     static class CenterPanel extends JPanel {
-        private final JPanel pnCard;
-        private final CardLayout lyCard;
-
-        public CenterPanel(JPanel pnCard, CardLayout lyCard) {
-            this.pnCard = pnCard;
-            this.lyCard = lyCard;
-
+        public CenterPanel() {
             setLayout(new GridBagLayout());
             setBackground(clBe);
 
@@ -56,8 +50,8 @@ public class ChooseLevelPanel extends JPanel {
             btnLevel.addActionListener(e -> {
                 Main.STATE.setLevel(Utils.convertLevelToNumber(level));
 
-                pnCard.add(new SudokuPanel(pnCard, lyCard), "SodokuPanel");
-                lyCard.show(pnCard, "SodokuPanel");
+                Main.STATE.getPnCard().add(new SudokuPanel(), "SodokuPanel");
+                Main.STATE.getLyCard().show(Main.STATE.getPnCard(), "SodokuPanel");
             });
 
             return btnLevel;

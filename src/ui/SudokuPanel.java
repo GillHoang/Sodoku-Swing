@@ -19,7 +19,7 @@ public class SudokuPanel extends JPanel {
     public final int level = Main.STATE.getLevel();
     public final String username = Main.STATE.getUsername();
 
-    public SudokuPanel(JPanel pnCard, CardLayout lyCard) {
+    public SudokuPanel() {
         super();
 
         setLayout(new BorderLayout());
@@ -27,18 +27,18 @@ public class SudokuPanel extends JPanel {
         setBackground(Colors.clBe);
 
         add(new UpPanel(), BorderLayout.NORTH);
-        add(new CenterPanel(pnCard, lyCard), BorderLayout.CENTER);
+        add(new CenterPanel(), BorderLayout.CENTER);
     }
 
     static class CenterPanel extends JPanel {
-        public CenterPanel(JPanel pnCard, CardLayout lyCard) {
+        public CenterPanel() {
             super();
 
             setLayout(new BorderLayout());
             setBackground(clLam);
 
             add(new InformationPanel(), BorderLayout.NORTH);
-            add(new BoardPanel(pnCard, lyCard), BorderLayout.CENTER);
+            add(new BoardPanel(), BorderLayout.CENTER);
             add(new NumberButtonPanel(), BorderLayout.SOUTH);
         }
 
@@ -77,20 +77,15 @@ public class SudokuPanel extends JPanel {
             private final JButton[][] buttons = new JButton[9][9];
             private final int[][] board;
             private final int[][] solution;
-            private final JPanel pnCard;
-            private final CardLayout lyCard;
             private int row1;
             private int col1;
 
-            public BoardPanel(JPanel pnCard, CardLayout lyCard) {
+            public BoardPanel() {
                 super();
 
                 Main.STATE.init();
                 board = Main.STATE.getBoard();
                 solution = Main.STATE.getSolution();
-
-                this.pnCard = pnCard;
-                this.lyCard = lyCard;
 
                 setLayout(new GridLayout(9, 9));
 
@@ -240,8 +235,8 @@ public class SudokuPanel extends JPanel {
                         btn.setText(String.valueOf(value));
 
                         if (Sudoku.checkDone(board)) {
-                            pnCard.add(new GoodEnding(), "GoodEnding");
-                            lyCard.show(pnCard, "GoodEnding");
+                            Main.STATE.getPnCard().add(new GoodEnding(), "GoodEnding");
+                            Main.STATE.getLyCard().show(Main.STATE.getPnCard(), "GoodEnding");
 
                             Main.STATE.setCompleted(true);
 
@@ -249,8 +244,8 @@ public class SudokuPanel extends JPanel {
                         }
 
                         if (mistakes == Utils.MAX_TIMES_WRONG) {
-                            pnCard.add(new BadEnding(), "BadEnding");
-                            lyCard.show(pnCard, "BadEnding");
+                            Main.STATE.getPnCard().add(new BadEnding(), "BadEnding");
+                            Main.STATE.getLyCard().show(Main.STATE.getPnCard(), "BadEnding");
                             return;
                         }
 
