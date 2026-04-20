@@ -181,6 +181,9 @@ public class SudokuPanel extends JPanel {
                 @Override
                 public void keyPressed(KeyEvent e) {
                     if (!isCellEditable(row1, col1)) return;
+                    if (Main.STATE.getMistakes() == 3) {
+                        return;
+                    }
 
                     int keyCode = e.getKeyCode();
 
@@ -192,6 +195,29 @@ public class SudokuPanel extends JPanel {
                     int number = parseNumberInput(keyCode);
                     if (number >= 1 && number <= 9) {
                         updateCell(row1, col1, number);
+                    }
+
+                    if (Sudoku.checkDone(board)) {
+                        Main.STATE.getPnCard().add(new GoodEnding(), "GoodEnding");
+                        Main.STATE.getLyCard().show(Main.STATE.getPnCard(), "GoodEnding");
+
+                        Main.STATE.setCompleted(true);
+
+                    } else if (Main.STATE.getMistakes() == Utils.MAX_TIMES_WRONG) {
+                        // froze 3s
+                        new SwingWorker<Void, Void>() {
+                            @Override
+                            protected Void doInBackground() throws Exception {
+                                Thread.sleep(3000);
+                                return null;
+                            }
+
+                            @Override
+                            protected void done() {
+                                Main.STATE.getPnCard().add(new BadEnding(), "BadEnding");
+                                Main.STATE.getLyCard().show(Main.STATE.getPnCard(), "BadEnding");
+                            }
+                        }.execute();
                     }
                 }
 
@@ -230,24 +256,7 @@ public class SudokuPanel extends JPanel {
                         btn.setText(" ");
                         btn.setForeground(null);
                     } else {
-                        int mistakes = Main.STATE.getMistakes();
-
                         btn.setText(String.valueOf(value));
-
-                        if (Sudoku.checkDone(board)) {
-                            Main.STATE.getPnCard().add(new GoodEnding(), "GoodEnding");
-                            Main.STATE.getLyCard().show(Main.STATE.getPnCard(), "GoodEnding");
-
-                            Main.STATE.setCompleted(true);
-
-                            return;
-                        }
-
-                        if (mistakes == Utils.MAX_TIMES_WRONG) {
-                            Main.STATE.getPnCard().add(new BadEnding(), "BadEnding");
-                            Main.STATE.getLyCard().show(Main.STATE.getPnCard(), "BadEnding");
-                            return;
-                        }
 
                         if (value != solution[row][col]) {
                             Main.STATE.incrementMistakes();

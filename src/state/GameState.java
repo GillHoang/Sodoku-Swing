@@ -8,6 +8,8 @@ import java.awt.*;
 
 public class GameState {
     private static GameState instance;
+    private final JPanel pnCard;
+    private final CardLayout lyCard;
     private int level;
     private int mistakes;
     private boolean isCompleted;
@@ -15,8 +17,6 @@ public class GameState {
     private int[][] solution;
     private long startTime;
     private String username;
-    private final JPanel pnCard;
-    private final CardLayout lyCard;
 
     private GameState() {
         solution = new int[9][9];
