@@ -2,14 +2,19 @@ package state;
 
 import helpers.Sudoku;
 import helpers.Utils;
+import observer.GameEvent;
+import observer.GameObserver;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameState {
     private static GameState instance;
     private final JPanel pnCard;
     private final CardLayout lyCard;
+    private final List<GameObserver> observers = new ArrayList<>();
     private int level;
     private int mistakes;
     private boolean isCompleted;
@@ -37,9 +42,32 @@ public class GameState {
         return instance;
     }
 
+    public void addObserver(GameObserver go) {
+        observers.add(go);
+    }
+
+    public void removeObserver(GameObserver go) {
+        observers.remove(go);
+    }
+
     public void init() {
         solution = Sudoku.sudokuGenerator();
         board = Sudoku.createPuzzle(solution, Utils.convertNumberToRemove(level));
+        mistakes = 0;
+        isCompleted = false;
+
+        notifyEvent(GameEvent.GAME_RESET);
+    }
+
+    public boolean setCellValue(int row, int colm, int value) {
+
+        if (mistakes == Utils.MAX_MISTAKES) return false;
+
+        board[row][colm] = value;
+
+        notifyCellChanged(row, colm, value);
+
+        return true;
     }
 
     public int[][] getBoard() {
@@ -64,6 +92,8 @@ public class GameState {
 
     public void incrementMistakes() {
         this.mistakes++;
+
+        notifyEvent(GameEvent.MISTAKE);
     }
 
     public boolean isCompleted() {
@@ -72,6 +102,13 @@ public class GameState {
 
     public void setCompleted(boolean completed) {
         this.isCompleted = completed;
+        if (completed) {
+            notifyEvent(GameEvent.GAME_COMPLETED);
+        }
+    }
+
+    public void setLost() {
+        notifyEvent(GameEvent.GAME_LOST);
     }
 
     public int getLevel() {
@@ -96,5 +133,15 @@ public class GameState {
 
     public CardLayout getLyCard() {
         return lyCard;
+    }
+
+    private void notifyCellChanged(int row, int col, int value) {
+        for (GameObserver o : observers)
+            o.onCellChanged(row, col, value);
+    }
+
+    private void notifyEvent(GameEvent event) {
+        for (GameObserver o : observers)
+            o.onGameStateChanged(event);
     }
 }

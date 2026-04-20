@@ -1,5 +1,8 @@
 package main;
 
+import observer.BadEndingObserver;
+import observer.GoodEndingObserver;
+import observer.MistakeObserver;
 import state.GameState;
 import ui.LoginPanel;
 
@@ -10,6 +13,10 @@ public class Main extends JFrame {
 
     public Main() {
         super("Sudoku");
+
+        STATE.addObserver(new GoodEndingObserver());
+        STATE.addObserver(new BadEndingObserver());
+        STATE.addObserver(new MistakeObserver());
 
         STATE.getPnCard().add(new LoginPanel(), "login");
 
