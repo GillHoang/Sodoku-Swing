@@ -147,7 +147,7 @@ public class Sudoku {
     public static int[][] createPuzzle(int[][] fullGrid, int k) {
         int[][] puzzle = new int[9][9];
         for (int i = 0; i < 9; i++) {
-            System.arraycopy(fullGrid[i], 0, puzzle[i], 0, 9);  // copy nhanh và an toàn
+            System.arraycopy(fullGrid[i], 0, puzzle[i], 0, 9);
         }
 
         removeKDigits(puzzle, k);

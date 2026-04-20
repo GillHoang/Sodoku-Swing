@@ -198,17 +198,29 @@ public class SudokuPanel extends JPanel {
                     }
 
                     if (Sudoku.checkDone(board)) {
-                        Main.STATE.getPnCard().add(new GoodEnding(), "GoodEnding");
-                        Main.STATE.getLyCard().show(Main.STATE.getPnCard(), "GoodEnding");
+                        // froze 3s
+                        new SwingWorker<Void, Void>() {
+                            @Override
+                            protected Void doInBackground() throws Exception {
+                                Thread.sleep(2000);
+                                return null;
+                            }
 
-                        Main.STATE.setCompleted(true);
+                            @Override
+                            protected void done() {
+                                Main.STATE.getPnCard().add(new GoodEnding(), "GoodEnding");
+                                Main.STATE.getLyCard().show(Main.STATE.getPnCard(), "GoodEnding");
+
+                                Main.STATE.setCompleted(true);
+                            }
+                        }.execute();
 
                     } else if (Main.STATE.getMistakes() == Utils.MAX_TIMES_WRONG) {
                         // froze 3s
                         new SwingWorker<Void, Void>() {
                             @Override
                             protected Void doInBackground() throws Exception {
-                                Thread.sleep(3000);
+                                Thread.sleep(2000);
                                 return null;
                             }
 
