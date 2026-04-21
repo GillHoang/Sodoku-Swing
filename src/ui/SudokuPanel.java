@@ -13,9 +13,6 @@ import java.awt.event.KeyEvent;
 import static helpers.Colors.*;
 
 public class SudokuPanel extends JPanel {
-    public final int level = Main.STATE.getLevel();
-    public final String username = Main.STATE.getUsername();
-
     public SudokuPanel() {
         super();
 
@@ -46,6 +43,9 @@ public class SudokuPanel extends JPanel {
             }
         }
 
+        // TODO: sẽ thực hiện này sau
+        // Cơ chế là ấn vào button số thì sẽ làm button đậm màu hơn
+        // sau đó chọn vào các ô trống thì sẽ hiên lên số vừa chọn.
         static class NumberButtonPanel extends JPanel {
             public NumberButtonPanel() {
                 super();
@@ -244,7 +244,7 @@ public class SudokuPanel extends JPanel {
 
             setLayout(new BorderLayout());
 
-            JLabel lbTitle = new JLabel("Xin chào " + username + ", bạn đã chọn level " + Utils.convertNumberToLevel(level), SwingConstants.CENTER);
+            JLabel lbTitle = new JLabel("Xin chào " + Main.STATE.getUsername() + ", bạn đã chọn level " + Utils.convertNumberToLevel(Main.STATE.getLevel()), SwingConstants.CENTER);
             lbTitle.setFont(Utils.createDefaultStyle(20));
             lbTitle.setForeground(clTrang);
 

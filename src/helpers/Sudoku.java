@@ -153,6 +153,7 @@ public class Sudoku {
         }
 
         removeKDigits(puzzle, k);
+
         return puzzle;
     }
 
@@ -164,6 +165,7 @@ public class Sudoku {
                 if (grid[i][j] == 0) return false;
             }
         }
+
         return true;
     }
 }

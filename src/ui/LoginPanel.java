@@ -34,8 +34,6 @@ public class LoginPanel extends JPanel {
     }
 
     static class CenterPanel extends JPanel {
-        private String username;
-
         public CenterPanel() {
             setLayout(new GridBagLayout());
             setBackground(clBe);
@@ -71,10 +69,7 @@ public class LoginPanel extends JPanel {
                     return;
                 }
 
-                username = input;
-
-                Main.STATE.setUsername(username);
-
+                Main.STATE.setUsername(input);
                 Main.STATE.getPnCard().add(new ChooseLevelPanel(), "chooseLevel");
                 Main.STATE.getLyCard().show(Main.STATE.getPnCard(), "chooseLevel");
             });

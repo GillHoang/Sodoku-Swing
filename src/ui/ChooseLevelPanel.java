@@ -10,8 +10,6 @@ import java.awt.*;
 import static helpers.Colors.*;
 
 public class ChooseLevelPanel extends JPanel {
-    public final String username = Main.STATE.getUsername();
-
     public ChooseLevelPanel() {
         setLayout(new BorderLayout());
 
@@ -62,7 +60,7 @@ public class ChooseLevelPanel extends JPanel {
         public UpPanel() {
             setLayout(new BorderLayout());
 
-            JLabel lbTitle = new JLabel("Xin chào " + username + "! Vui lòng chọn level phù hợp", SwingConstants.CENTER);
+            JLabel lbTitle = new JLabel("Xin chào " + Main.STATE.getUsername() + "! Vui lòng chọn level phù hợp", SwingConstants.CENTER);
             lbTitle.setFont(Utils.createDefaultStyle(20));
             lbTitle.setForeground(clTrang);
 
