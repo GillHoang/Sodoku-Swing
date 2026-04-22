@@ -3,6 +3,7 @@ package main;
 import observer.BadEndingObserver;
 import observer.GoodEndingObserver;
 import observer.MistakeObserver;
+import observer.ScoreObserver;
 import state.GameState;
 import ui.LoginPanel;
 
@@ -17,6 +18,7 @@ public class Main extends JFrame {
         STATE.addObserver(new GoodEndingObserver());
         STATE.addObserver(new BadEndingObserver());
         STATE.addObserver(new MistakeObserver());
+        STATE.addObserver(new ScoreObserver());
 
         STATE.getPnCard().add(new LoginPanel(), "login");
 

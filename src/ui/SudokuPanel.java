@@ -16,6 +16,8 @@ public class SudokuPanel extends JPanel {
     public SudokuPanel() {
         super();
 
+        Main.STATE.startTimer();
+
         setLayout(new BorderLayout());
 
         setBackground(Colors.clBe);
@@ -40,6 +42,36 @@ public class SudokuPanel extends JPanel {
             public InformationPanel() {
                 super();
                 setBackground(clLam);
+                setLayout(new BorderLayout());
+
+                JPanel pnScore = new JPanel();
+                int score = Main.STATE.getScore();
+                JLabel lbScore = Main.STATE.getLbScore();
+                lbScore.setText("Điểm: " + score);
+                pnScore.add(lbScore);
+                pnScore.setBackground(clLam);
+
+                JPanel pnTime = new JPanel();
+                long time = Main.STATE.getElapsedTime();
+                JLabel lbTime = Main.STATE.getLbTime();
+                lbTime.setText("Thời gian: " + Utils.formatTime(time));
+                pnTime.add(lbTime);
+                pnTime.setBackground(clLam);
+
+                Timer timer = Main.STATE.getTimer();
+                timer.start();
+
+                JPanel pnMistake = new JPanel();
+                int mistakes = Main.STATE.getMistakes();
+                JLabel lbMistake = Main.STATE.getLbMistakes();
+                lbMistake.setText("Lỗi: " + mistakes + "/" + Utils.MAX_MISTAKES);
+                pnMistake.add(lbMistake);
+                pnMistake.setBackground(clLam);
+
+
+                add(pnScore, BorderLayout.WEST);
+                add(pnTime, BorderLayout.CENTER);
+                add(pnMistake, BorderLayout.EAST);
             }
         }
 
@@ -238,7 +270,7 @@ public class SudokuPanel extends JPanel {
         }
     }
 
-    class UpPanel extends JPanel {
+    static class UpPanel extends JPanel {
         public UpPanel() {
             super();
 

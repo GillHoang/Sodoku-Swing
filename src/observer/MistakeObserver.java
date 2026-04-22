@@ -10,6 +10,8 @@ public class MistakeObserver implements GameObserver {
         if (Main.STATE.getSolution()[row][colm] != value) {
             Main.STATE.incrementMistakes();
 
+            Main.STATE.getLbMistakes().setText("Lỗi: " + Main.STATE.getMistakes() + "/" + Utils.MAX_MISTAKES);
+
             if (Main.STATE.getMistakes() == Utils.MAX_MISTAKES) {
                 Main.STATE.setLost();
             }

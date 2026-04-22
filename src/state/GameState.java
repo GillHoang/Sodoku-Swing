@@ -2,6 +2,7 @@ package state;
 
 import helpers.Sudoku;
 import helpers.Utils;
+import main.Main;
 import observer.GameEvent;
 import observer.GameObserver;
 
@@ -10,11 +11,17 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static helpers.Colors.clTrang;
+
 public class GameState {
     private static GameState instance;
     private final JPanel pnCard;
+    private final JLabel lbScore;
+    private final JLabel lbTime;
+    private final JLabel lbMistakes;
     private final CardLayout lyCard;
     private final List<GameObserver> observers = new ArrayList<>();
+    private final Timer timer;
     private int level;
     private int mistakes;
     private boolean isCompleted;
@@ -22,12 +29,30 @@ public class GameState {
     private int[][] solution;
     private long startTime;
     private String username;
+    private int score;
 
     private GameState() {
         solution = new int[9][9];
         board = new int[9][9];
         mistakes = 0;
         isCompleted = false;
+
+        lbScore = new JLabel("Điểm: ");
+        lbScore.setFont(Utils.createDefaultStyle(20));
+        lbScore.setForeground(clTrang);
+
+        lbTime = new JLabel("Thời gian: ");
+        lbTime.setFont(Utils.createDefaultStyle(20));
+        lbTime.setForeground(clTrang);
+
+        lbMistakes = new JLabel("Lỗi: ");
+        lbMistakes.setFont(Utils.createDefaultStyle(20));
+        lbMistakes.setForeground(clTrang);
+
+        timer =  new Timer(1000, e -> {
+            long elapsed = Main.STATE.getElapsedTime();
+            Main.STATE.getLbTime().setText("Thời gian: " + Utils.formatTime(elapsed));
+        });
 
         pnCard = new JPanel();
         lyCard = new CardLayout();
@@ -55,6 +80,7 @@ public class GameState {
         board = Sudoku.createPuzzle(solution, Utils.convertNumberToRemove(level));
         mistakes = 0;
         isCompleted = false;
+        score = 0;
 
         notifyEvent(GameEvent.GAME_RESET);
     }
@@ -83,6 +109,10 @@ public class GameState {
     }
 
     public long getElapsedTime() {
+        if (startTime == 0) {
+            return 0;
+        }
+
         return (System.currentTimeMillis() - startTime) / 1000;
     }
 
@@ -133,6 +163,31 @@ public class GameState {
 
     public CardLayout getLyCard() {
         return lyCard;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void addScore(int score) {
+        if (this.score < 0) return;
+        this.score += score;
+    }
+
+    public JLabel getLbScore() {
+        return lbScore;
+    }
+
+    public JLabel getLbTime() {
+        return lbTime;
+    }
+
+    public JLabel getLbMistakes() {
+        return lbMistakes;
+    }
+
+    public Timer getTimer() {
+        return timer;
     }
 
     private void notifyCellChanged(int row, int col, int value) {

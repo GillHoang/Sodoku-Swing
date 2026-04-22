@@ -29,4 +29,11 @@ public class Utils {
         else if (level == Levels.MEDIUM.value()) return Levels.MEDIUM.removeParts();
         return Levels.HARD.removeParts();
     }
+
+    public static String formatTime(long millis) {
+        long minutes = millis / 60;
+        long seconds = millis % 60;
+
+        return String.format("%02d:%02d", minutes, seconds);
+    }
 }
