@@ -49,7 +49,7 @@ public class GameState {
         lbMistakes.setFont(Utils.createDefaultStyle(20));
         lbMistakes.setForeground(clTrang);
 
-        timer =  new Timer(1000, e -> {
+        timer = new Timer(1000, e -> {
             long elapsed = Main.STATE.getElapsedTime();
             Main.STATE.getLbTime().setText("Thời gian: " + Utils.formatTime(elapsed));
         });

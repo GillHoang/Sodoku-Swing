@@ -1,9 +1,9 @@
 package main;
 
-import observer.BadEndingObserver;
-import observer.GoodEndingObserver;
-import observer.MistakeObserver;
-import observer.ScoreObserver;
+import observer.impl.BadEndingObserver;
+import observer.impl.GoodEndingObserver;
+import observer.impl.MistakeObserver;
+import observer.impl.ScoreObserver;
 import state.GameState;
 import ui.LoginPanel;
 

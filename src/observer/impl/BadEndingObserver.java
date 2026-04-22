@@ -1,6 +1,8 @@
-package observer;
+package observer.impl;
 
 import main.Main;
+import observer.GameEvent;
+import observer.GameObserver;
 import ui.ending.BadEnding;
 
 import javax.swing.*;

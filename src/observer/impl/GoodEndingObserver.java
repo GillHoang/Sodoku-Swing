@@ -1,7 +1,9 @@
-package observer;
+package observer.impl;
 
 import helpers.Sudoku;
 import main.Main;
+import observer.GameEvent;
+import observer.GameObserver;
 import ui.ending.GoodEnding;
 
 import javax.swing.*;
