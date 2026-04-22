@@ -4,6 +4,7 @@ import main.Main;
 
 import java.util.Random;
 
+// Code trộm trên mạng,chỉ mang tính chất tham khảo :((
 public class Sudoku {
     private static final Random rand = new Random();
 
