@@ -1,7 +1,5 @@
 package helpers;
 
-import main.Main;
-
 import java.util.Random;
 
 // Code trộm trên mạng,chỉ mang tính chất tham khảo :((
@@ -156,17 +154,5 @@ public class Sudoku {
         removeKDigits(puzzle, k);
 
         return puzzle;
-    }
-
-    public static boolean checkDone(int[][] grid) {
-        int[][] sol = Main.STATE.getSolution();
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (grid[i][j] != sol[i][j]) return false;
-                if (grid[i][j] == 0) return false;
-            }
-        }
-
-        return true;
     }
 }

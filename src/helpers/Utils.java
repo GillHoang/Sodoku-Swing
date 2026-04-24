@@ -3,8 +3,6 @@ package helpers;
 import java.awt.*;
 
 public class Utils {
-    public static final int MAX_MISTAKES = 3;
-
     private Utils() {
     }
 

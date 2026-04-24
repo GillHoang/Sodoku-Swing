@@ -2,13 +2,12 @@ package ui;
 
 import helpers.Colors;
 import helpers.Utils;
+import listeners.SudokuKeyListener;
 import main.Main;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 import static helpers.Colors.*;
 
@@ -64,7 +63,7 @@ public class SudokuPanel extends JPanel {
                 JPanel pnMistake = new JPanel();
                 int mistakes = Main.STATE.getMistakes();
                 JLabel lbMistake = Main.STATE.getLbMistakes();
-                lbMistake.setText("Lỗi: " + mistakes + "/" + Utils.MAX_MISTAKES);
+                lbMistake.setText("Lỗi: " + mistakes + "/" + Main.STATE.getMaxMistakes());
                 pnMistake.add(lbMistake);
                 pnMistake.setBackground(clLam);
 
@@ -104,17 +103,11 @@ public class SudokuPanel extends JPanel {
 
         static class BoardPanel extends JPanel {
             private final JButton[][] buttons = new JButton[9][9];
-            private final int[][] board;
-            private final int[][] solution;
-            private int row1;
-            private int col1;
 
             public BoardPanel() {
                 super();
 
                 Main.STATE.init();
-                board = Main.STATE.getBoard();
-                solution = Main.STATE.getSolution();
 
                 setLayout(new GridLayout(9, 9));
 
@@ -150,17 +143,17 @@ public class SudokuPanel extends JPanel {
                 btn.setActionCommand(row + " " + col);
                 btn.addActionListener(this::handleCellSelection);
 
-                btn.addKeyListener(new SudokuKeyListener());
+                btn.addKeyListener(new SudokuKeyListener(row, col, buttons));
 
                 return btn;
             }
 
             private void initializeButtonAppearance(JButton btn, int row, int col) {
-                if (board[row][col] == 0) {
+                if (Main.STATE.getBoard()[row][col] == 0) {
                     btn.setText(" ");
                     btn.setForeground(null);
                 } else {
-                    btn.setText(String.valueOf(board[row][col]));
+                    btn.setText(String.valueOf(Main.STATE.getBoard()[row][col]));
                     btn.setForeground(clDen);
                 }
             }
@@ -172,9 +165,6 @@ public class SudokuPanel extends JPanel {
                 int r = Integer.parseInt(coords[0]);
                 int c = Integer.parseInt(coords[1]);
 
-                row1 = r;
-                col1 = c;
-
                 highlightSelection(r, c);
             }
 
@@ -184,11 +174,11 @@ public class SudokuPanel extends JPanel {
                     buttons[i][col].setBackground(clXam);
                 }
 
-                int value = board[row][col];
+                int value = Main.STATE.getBoard()[row][col];
                 if (value > 0) {
                     for (int i = 0; i < 9; i++) {
                         for (int j = 0; j < 9; j++) {
-                            if (board[i][j] == value) {
+                            if (Main.STATE.getBoard()[i][j] == value) {
                                 buttons[i][j].setBackground(clXam);
                             }
                         }
@@ -202,68 +192,6 @@ public class SudokuPanel extends JPanel {
                 for (JButton[] jButtons : buttons) {
                     for (JButton jButton : jButtons) {
                         jButton.setBackground(clTrang);
-                    }
-                }
-            }
-
-            private class SudokuKeyListener extends KeyAdapter {
-                @Override
-                public void keyPressed(KeyEvent e) {
-                    if (!isCellEditable(row1, col1)) return;
-
-                    int keyCode = e.getKeyCode();
-
-                    if (isDeleteKey(keyCode)) {
-                        handleDelete();
-                        return;
-                    }
-
-                    int number = parseNumberInput(keyCode);
-                    if (number >= 1 && number <= 9) {
-                        updateCell(row1, col1, number);
-                    }
-                }
-
-                private boolean isCellEditable(int row, int col) {
-                    Color fg = buttons[row][col].getForeground();
-                    return fg != clVang && fg != clDen;
-                }
-
-                private boolean isDeleteKey(int keyCode) {
-                    return keyCode == KeyEvent.VK_BACK_SPACE || keyCode == KeyEvent.VK_DELETE;
-                }
-
-                private void handleDelete() {
-                    if (!buttons[row1][col1].getText().equals(" ")) {
-                        updateCell(row1, col1, 0);
-                    }
-                }
-
-                private int parseNumberInput(int keyCode) {
-                    if (keyCode >= KeyEvent.VK_1 && keyCode <= KeyEvent.VK_9) {
-                        return keyCode - KeyEvent.VK_0;
-                    }
-                    if (keyCode >= KeyEvent.VK_NUMPAD1 && keyCode <= KeyEvent.VK_NUMPAD9) {
-                        return keyCode - KeyEvent.VK_NUMPAD0;
-                    }
-                    return 0;
-                }
-
-                private void updateCell(int row, int col, int value) {
-                    if (Main.STATE.isCompleted()) return;
-
-                    boolean stt = Main.STATE.setCellValue(row, col, value);
-
-                    if (!stt) return;
-
-                    JButton btn = buttons[row][col];
-
-                    if (value == 0) {
-                        btn.setText(" ");
-                        btn.setForeground(null);
-                    } else {
-                        btn.setText(String.valueOf(value));
-                        btn.setForeground(value == solution[row][col] ? clVang : clDo);
                     }
                 }
             }

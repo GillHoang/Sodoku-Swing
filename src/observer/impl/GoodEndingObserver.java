@@ -1,6 +1,5 @@
 package observer.impl;
 
-import helpers.Sudoku;
 import main.Main;
 import observer.GameEvent;
 import observer.GameObserver;
@@ -11,7 +10,7 @@ import javax.swing.*;
 public class GoodEndingObserver implements GameObserver {
     @Override
     public void onCellChanged(int row, int colm, int value) {
-        if (Sudoku.checkDone(Main.STATE.getBoard())) {
+        if (Main.STATE.checkDone()) {
             onGameStateChanged(GameEvent.GAME_COMPLETED);
         }
     }

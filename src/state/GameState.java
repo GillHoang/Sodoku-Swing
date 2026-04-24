@@ -14,6 +14,7 @@ import java.util.List;
 import static helpers.Colors.clTrang;
 
 public class GameState {
+    private static final int MAX_MISTAKES = 3;
     private static GameState instance;
     private final JPanel pnCard;
     private final JLabel lbScore;
@@ -71,10 +72,6 @@ public class GameState {
         observers.add(go);
     }
 
-    public void removeObserver(GameObserver go) {
-        observers.remove(go);
-    }
-
     public void init() {
         solution = Sudoku.sudokuGenerator();
         board = Sudoku.createPuzzle(solution, Utils.convertNumberToRemove(level));
@@ -87,7 +84,7 @@ public class GameState {
 
     public boolean setCellValue(int row, int colm, int value) {
 
-        if (mistakes == Utils.MAX_MISTAKES) return false;
+        if (mistakes == MAX_MISTAKES) return false;
 
         board[row][colm] = value;
 
@@ -188,6 +185,21 @@ public class GameState {
 
     public Timer getTimer() {
         return timer;
+    }
+
+    public int getMaxMistakes() {
+        return MAX_MISTAKES;
+    }
+
+    public boolean checkDone() {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (board[i][j] != solution[i][j]) return false;
+                if (board[i][j] == 0) return false;
+            }
+        }
+
+        return true;
     }
 
     private void notifyCellChanged(int row, int col, int value) {
