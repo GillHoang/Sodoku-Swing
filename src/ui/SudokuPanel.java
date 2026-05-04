@@ -34,7 +34,6 @@ public class SudokuPanel extends JPanel {
 
             add(new InformationPanel(), BorderLayout.NORTH);
             add(new BoardPanel(), BorderLayout.CENTER);
-            add(new NumberButtonPanel(), BorderLayout.SOUTH);
         }
 
         static class InformationPanel extends JPanel {
@@ -71,33 +70,6 @@ public class SudokuPanel extends JPanel {
                 add(pnScore, BorderLayout.WEST);
                 add(pnTime, BorderLayout.CENTER);
                 add(pnMistake, BorderLayout.EAST);
-            }
-        }
-
-        // TODO: sẽ thực hiện này sau
-        // Cơ chế là ấn vào button số thì sẽ làm button đậm màu hơn
-        // sau đó chọn vào các ô trống thì sẽ hiên lên số vừa chọn.
-        static class NumberButtonPanel extends JPanel {
-            public NumberButtonPanel() {
-                super();
-                setLayout(new GridBagLayout());
-                setBackground(clLam);
-                setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(clLam, 2), BorderFactory.createEmptyBorder(2, 2, 2, 2)));
-
-                JPanel pnNumber = new JPanel();
-                pnNumber.setLayout(new GridLayout(1, 9, 5, 5));
-                pnNumber.setBackground(clLam);
-
-                for (int i = 1; i <= 9; i++) {
-                    JButton btn = new JButton(String.valueOf(i));
-                    btn.setFont(Utils.createDefaultStyle(30));
-                    btn.setForeground(clTrang);
-                    btn.setBackground(clLam);
-                    btn.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-                    pnNumber.add(btn);
-                }
-
-                add(pnNumber, new GridBagConstraints());
             }
         }
 

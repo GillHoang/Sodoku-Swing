@@ -10,7 +10,8 @@ import java.awt.event.KeyEvent;
 import static helpers.Colors.*;
 
 public class SudokuKeyListener extends KeyAdapter {
-    private final int row1, col1;
+    private final int row1;
+    private final int col1;
     private final JButton[][] buttons;
 
     public SudokuKeyListener(int row, int col, JButton[][] buttons) {
@@ -20,7 +21,7 @@ public class SudokuKeyListener extends KeyAdapter {
     }
 
     @Override
-    public void keyPressed (KeyEvent e){
+    public void keyPressed(KeyEvent e) {
         if (!isCellEditable(row1, col1)) return;
 
         int keyCode = e.getKeyCode();
@@ -36,22 +37,22 @@ public class SudokuKeyListener extends KeyAdapter {
         }
     }
 
-    private boolean isCellEditable ( int row, int col){
+    private boolean isCellEditable(int row, int col) {
         Color fg = buttons[row][col].getForeground();
         return fg != clVang && fg != clDen;
     }
 
-    private boolean isDeleteKey ( int keyCode){
+    private boolean isDeleteKey(int keyCode) {
         return keyCode == KeyEvent.VK_BACK_SPACE || keyCode == KeyEvent.VK_DELETE;
     }
 
-    private void handleDelete () {
+    private void handleDelete() {
         if (!buttons[row1][col1].getText().equals(" ")) {
             updateCell(row1, col1, 0);
         }
     }
 
-    private int parseNumberInput ( int keyCode){
+    private int parseNumberInput(int keyCode) {
         if (keyCode >= KeyEvent.VK_1 && keyCode <= KeyEvent.VK_9) {
             return keyCode - KeyEvent.VK_0;
         }
@@ -61,7 +62,7 @@ public class SudokuKeyListener extends KeyAdapter {
         return 0;
     }
 
-    private void updateCell ( int row, int col, int value){
+    private void updateCell(int row, int col, int value) {
         if (Main.STATE.isCompleted()) return;
 
         boolean stt = Main.STATE.setCellValue(row, col, value);
