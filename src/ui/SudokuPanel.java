@@ -121,11 +121,11 @@ public class SudokuPanel extends JPanel {
             }
 
             private void initializeButtonAppearance(JButton btn, int row, int col) {
-                if (Main.STATE.getBoard()[row][col] == 0) {
+                if (Main.STATE.getCell(row, col) == 0) {
                     btn.setText(" ");
                     btn.setForeground(null);
                 } else {
-                    btn.setText(String.valueOf(Main.STATE.getBoard()[row][col]));
+                    btn.setText(String.valueOf(Main.STATE.getCell(row, col)));
                     btn.setForeground(clDen);
                 }
             }
@@ -146,11 +146,11 @@ public class SudokuPanel extends JPanel {
                     buttons[i][col].setBackground(clXam);
                 }
 
-                int value = Main.STATE.getBoard()[row][col];
+                int value = Main.STATE.getCell(row, col);
                 if (value > 0) {
                     for (int i = 0; i < 9; i++) {
                         for (int j = 0; j < 9; j++) {
-                            if (Main.STATE.getBoard()[i][j] == value) {
+                            if (Main.STATE.getCell(i, j) == value) {
                                 buttons[i][j].setBackground(clXam);
                             }
                         }

@@ -3,6 +3,7 @@ package observer.impl;
 import main.Main;
 import observer.GameEvent;
 import observer.GameObserver;
+import state.GameState;
 import ui.ending.BadEnding;
 
 import javax.swing.*;
@@ -10,7 +11,7 @@ import javax.swing.*;
 public class BadEndingObserver implements GameObserver {
     @Override
     public void onCellChanged(int row, int colm, int value) {
-        // hihi
+        // yes
     }
 
     @Override
@@ -26,8 +27,11 @@ public class BadEndingObserver implements GameObserver {
 
             @Override
             protected void done() {
-                Main.STATE.getPnCard().add(new BadEnding(), "BadEnding");
-                Main.STATE.getLyCard().show(Main.STATE.getPnCard(), "BadEnding");
+                Main.STATE.removeEndingPanels();
+                Main.STATE.getPnCard().add(new BadEnding(), GameState.CARD_BAD_ENDING);
+                Main.STATE.getLyCard().show(Main.STATE.getPnCard(), GameState.CARD_BAD_ENDING);
+                Main.STATE.getPnCard().revalidate();
+                Main.STATE.getPnCard().repaint();
             }
         }.execute();
     }

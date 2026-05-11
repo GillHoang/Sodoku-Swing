@@ -9,7 +9,7 @@ public class ScoreObserver implements GameObserver {
     public void onCellChanged(int row, int colm, int value) {
         if (Main.STATE.isCompleted()) return;
 
-        if (Main.STATE.getSolution()[row][colm] == value) {
+        if (Main.STATE.getSolutionCell(row, colm) == value) {
             Main.STATE.addScore(20);
         } else {
             if (Main.STATE.getScore() > 0) {
@@ -22,5 +22,8 @@ public class ScoreObserver implements GameObserver {
 
     @Override
     public void onGameStateChanged(GameEvent event) {
+        if (event == GameEvent.GAME_RESET) {
+            Main.STATE.getLbScore().setText("Điểm: " + Main.STATE.getScore());
+        }
     }
 }

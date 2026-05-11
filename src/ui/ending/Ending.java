@@ -3,28 +3,32 @@ package ui.ending;
 import helpers.Utils;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.util.List;
 
 import static helpers.Colors.*;
 
 public class Ending extends JPanel {
+
+    private final transient List<EndingAction> actions;
+
     private final String title;
     private final int titleSize;
-    private final List<String> buttonTexts;
 
-    public Ending(String title, int titleSize, List<String> buttonTexts) {
+    public Ending(String title, int titleSize, List<EndingAction> actions) {
         super();
 
         this.title = title;
         this.titleSize = titleSize;
-        this.buttonTexts = buttonTexts;
+        this.actions = actions;
 
         setLayout(new BorderLayout());
 
         add(new UpPanel(), BorderLayout.NORTH);
         add(new CenterPanel(), BorderLayout.CENTER);
+    }
+
+    public record EndingAction(String label, Runnable action) {
     }
 
     class UpPanel extends JPanel {
@@ -51,17 +55,18 @@ public class Ending extends JPanel {
             setLayout(new GridBagLayout());
 
             JPanel pnOptions = new JPanel();
-            pnOptions.setLayout(new GridLayout(buttonTexts.size(), 1, 0, 10));
+            pnOptions.setLayout(new GridLayout(actions.size(), 1, 0, 10));
             pnOptions.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(clLam, 2), BorderFactory.createEmptyBorder(10, 15, 10, 15)));
             pnOptions.setBackground(clBe);
 
-            buttonTexts.forEach(text -> {
-                JButton btn = new JButton(text);
+            for (EndingAction endingAction : actions) {
+                JButton btn = new JButton(endingAction.label());
                 btn.setFont(Utils.createDefaultStyle(34));
                 btn.setBackground(clVang);
                 btn.setForeground(clTrang);
+                btn.addActionListener(e -> endingAction.action().run());
                 pnOptions.add(btn);
-            });
+            }
 
             GridBagConstraints gbc = new GridBagConstraints();
             add(pnOptions, gbc);

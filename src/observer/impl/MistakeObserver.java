@@ -11,7 +11,7 @@ public class MistakeObserver implements GameObserver {
 
         if (value == 0) return;
 
-        if (Main.STATE.getSolution()[row][colm] != value) {
+        if (Main.STATE.getSolutionCell(row, colm) != value) {
             Main.STATE.incrementMistakes();
 
             Main.STATE.getLbMistakes().setText("Lỗi: " + Main.STATE.getMistakes() + "/" + Main.STATE.getMaxMistakes());
@@ -23,7 +23,9 @@ public class MistakeObserver implements GameObserver {
     }
 
     @Override
-    public void onGameStateChanged(GameEvent event) throws UnsupportedOperationException {
-        // hihi
+    public void onGameStateChanged(GameEvent event) {
+        if (event == GameEvent.GAME_RESET) {
+            Main.STATE.getLbMistakes().setText("Lỗi: " + Main.STATE.getMistakes() + "/" + Main.STATE.getMaxMistakes());
+        }
     }
 }

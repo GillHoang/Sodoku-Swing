@@ -47,16 +47,14 @@ public class ChooseLevelPanel extends JPanel {
 
             btnLevel.addActionListener(e -> {
                 Main.STATE.setLevel(Utils.convertLevelToNumber(level));
-
-                Main.STATE.getPnCard().add(new SudokuPanel(), "SodokuPanel");
-                Main.STATE.getLyCard().show(Main.STATE.getPnCard(), "SodokuPanel");
+                Main.STATE.startSudokuGame();
             });
 
             return btnLevel;
         }
     }
 
-    class UpPanel extends JPanel {
+    static class UpPanel extends JPanel {
         public UpPanel() {
             setLayout(new BorderLayout());
 

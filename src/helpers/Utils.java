@@ -28,9 +28,9 @@ public class Utils {
         return Levels.HARD.removeParts();
     }
 
-    public static String formatTime(long millis) {
-        long minutes = millis / 60;
-        long seconds = millis % 60;
+    public static String formatTime(long elapsedSeconds) {
+        long minutes = elapsedSeconds / 60;
+        long seconds = elapsedSeconds % 60;
 
         return String.format("%02d:%02d", minutes, seconds);
     }

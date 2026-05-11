@@ -15,12 +15,12 @@ public class Main extends JFrame {
     public Main() {
         super("Sudoku");
 
-        STATE.addObserver(new GoodEndingObserver());
-        STATE.addObserver(new BadEndingObserver());
         STATE.addObserver(new MistakeObserver());
         STATE.addObserver(new ScoreObserver());
+        STATE.addObserver(new BadEndingObserver());
+        STATE.addObserver(new GoodEndingObserver());
 
-        STATE.getPnCard().add(new LoginPanel(), "login");
+        STATE.getPnCard().add(new LoginPanel(), GameState.CARD_LOGIN);
 
         this.add(STATE.getPnCard());
 

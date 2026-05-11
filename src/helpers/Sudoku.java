@@ -1,14 +1,15 @@
 package helpers;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
-// Code trộm trên mạng,chỉ mang tính chất tham khảo :((
 public class Sudoku {
     private static final Random rand = new Random();
 
     private Sudoku() {
     }
-
 
     // Returns false if given 3x3 block contains num
     // Ensure the number is not used in the box
@@ -107,27 +108,20 @@ public class Sudoku {
         return false;
     }
 
-    // Remove K digits randomly from the grid
-    // This will create a Sudoku puzzle by removing digits
     public static void removeKDigits(int[][] grid, int k) {
-        while (k > 0) {
-            // Pick a random cell
-            int cellId = rand.nextInt(81);
-
-            // Get the row index
-            int i = cellId / 9;
-
-            // Get the column index
-            int j = cellId % 9;
-
-            // Remove the digit if the cell is not already empty
-            if (grid[i][j] != 0) {
-                // Empty the cell
-                grid[i][j] = 0;
-
-                // Decrease the count of digits to remove
-                k--;
+        List<int[]> filled = new ArrayList<>(81);
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (grid[i][j] != 0) {
+                    filled.add(new int[]{i, j});
+                }
             }
+        }
+        Collections.shuffle(filled, rand);
+        int remove = Math.min(k, filled.size());
+        for (int n = 0; n < remove; n++) {
+            int[] cell = filled.get(n);
+            grid[cell[0]][cell[1]] = 0;
         }
     }
 

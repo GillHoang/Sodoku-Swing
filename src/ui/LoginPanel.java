@@ -2,6 +2,7 @@ package ui;
 
 import helpers.Utils;
 import main.Main;
+import state.GameState;
 
 import javax.swing.*;
 import java.awt.*;
@@ -58,11 +59,11 @@ public class LoginPanel extends JPanel {
         }
 
         private JButton getBtnDangNhap(JTextField tfUserName) {
-            JButton bthDangNhap = new JButton("Bắt đầu chơi");
-            bthDangNhap.setFont(Utils.createDefaultStyle(20));
-            bthDangNhap.setBackground(clVang);
-            bthDangNhap.setForeground(clTrang);
-            bthDangNhap.addActionListener(e -> {
+            JButton btnDangNhap = new JButton("Bắt đầu chơi");
+            btnDangNhap.setFont(Utils.createDefaultStyle(20));
+            btnDangNhap.setBackground(clVang);
+            btnDangNhap.setForeground(clTrang);
+            btnDangNhap.addActionListener(e -> {
                 String input = tfUserName.getText();
 
                 if (input.isEmpty()) {
@@ -70,11 +71,11 @@ public class LoginPanel extends JPanel {
                 }
 
                 Main.STATE.setUsername(input);
-                Main.STATE.getPnCard().add(new ChooseLevelPanel(), "chooseLevel");
-                Main.STATE.getLyCard().show(Main.STATE.getPnCard(), "chooseLevel");
+                Main.STATE.getPnCard().add(new ChooseLevelPanel(), GameState.CARD_CHOOSE_LEVEL);
+                Main.STATE.getLyCard().show(Main.STATE.getPnCard(), GameState.CARD_CHOOSE_LEVEL);
             });
 
-            return bthDangNhap;
+            return btnDangNhap;
         }
 
         private JTextField getTfUsername() {

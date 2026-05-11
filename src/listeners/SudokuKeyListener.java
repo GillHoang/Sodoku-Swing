@@ -76,7 +76,7 @@ public class SudokuKeyListener extends KeyAdapter {
             btn.setForeground(null);
         } else {
             btn.setText(String.valueOf(value));
-            btn.setForeground(value == Main.STATE.getSolution()[row][col] ? clVang : clDo);
+            btn.setForeground(value == Main.STATE.getSolutionCell(row, col) ? clVang : clDo);
         }
     }
 }

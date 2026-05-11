@@ -2,9 +2,10 @@ package state;
 
 import helpers.Sudoku;
 import helpers.Utils;
-import main.Main;
 import observer.GameEvent;
 import observer.GameObserver;
+import ui.SudokuPanel;
+import ui.ending.Ending;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +15,12 @@ import java.util.List;
 import static helpers.Colors.clTrang;
 
 public class GameState {
+    public static final String CARD_LOGIN = "login";
+    public static final String CARD_CHOOSE_LEVEL = "chooseLevel";
+    public static final String CARD_SUDOKU = "SudokuPanel";
+    public static final String CARD_GOOD_ENDING = "GoodEnding";
+    public static final String CARD_BAD_ENDING = "BadEnding";
+
     private static final int MAX_MISTAKES = 3;
     private static GameState instance;
     private final JPanel pnCard;
@@ -50,10 +57,8 @@ public class GameState {
         lbMistakes.setFont(Utils.createDefaultStyle(20));
         lbMistakes.setForeground(clTrang);
 
-        timer = new Timer(1000, e -> {
-            long elapsed = Main.STATE.getElapsedTime();
-            Main.STATE.getLbTime().setText("Thời gian: " + Utils.formatTime(elapsed));
-        });
+        timer = new Timer(1000, e ->
+                lbTime.setText("Thời gian: " + Utils.formatTime(getElapsedTime())));
 
         pnCard = new JPanel();
         lyCard = new CardLayout();
@@ -93,12 +98,23 @@ public class GameState {
         return true;
     }
 
-    public int[][] getBoard() {
-        return board;
+    public int getCell(int row, int col) {
+        return board[row][col];
     }
 
-    public int[][] getSolution() {
-        return solution;
+    public int getSolutionCell(int row, int col) {
+        return solution[row][col];
+    }
+
+    public boolean hasEmptyCell() {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (board[i][j] == 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public void startTimer() {
@@ -131,8 +147,6 @@ public class GameState {
         if (this.isCompleted == completed) return;
 
         this.isCompleted = completed;
-
-        if (completed) notifyEvent(GameEvent.GAME_COMPLETED);
     }
 
     public void setLost() {
@@ -186,6 +200,51 @@ public class GameState {
 
     public Timer getTimer() {
         return timer;
+    }
+
+    public void stopTimer() {
+        timer.stop();
+    }
+
+    public void removeSudokuPanels() {
+        for (Component c : pnCard.getComponents()) {
+            if (c instanceof SudokuPanel) {
+                pnCard.remove(c);
+            }
+        }
+    }
+
+    public void removeEndingPanels() {
+        for (Component c : pnCard.getComponents()) {
+            if (c instanceof Ending) {
+                pnCard.remove(c);
+            }
+        }
+    }
+
+    public void startSudokuGame() {
+        stopTimer();
+        isCompleted = false;
+        removeSudokuPanels();
+        pnCard.add(new SudokuPanel(), CARD_SUDOKU);
+        lyCard.show(pnCard, CARD_SUDOKU);
+        pnCard.revalidate();
+        pnCard.repaint();
+    }
+
+    public void restartSudokuGame() {
+        removeEndingPanels();
+        startSudokuGame();
+    }
+
+    public void navigateToChooseLevel() {
+        stopTimer();
+        isCompleted = false;
+        removeEndingPanels();
+        removeSudokuPanels();
+        lyCard.show(pnCard, CARD_CHOOSE_LEVEL);
+        pnCard.revalidate();
+        pnCard.repaint();
     }
 
     public int getMaxMistakes() {
