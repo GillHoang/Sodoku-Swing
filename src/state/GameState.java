@@ -84,7 +84,7 @@ public class GameState {
 
     public boolean setCellValue(int row, int colm, int value) {
 
-        if (mistakes == MAX_MISTAKES) return false;
+        if (mistakes >= MAX_MISTAKES) return false;
 
         board[row][colm] = value;
 
@@ -128,10 +128,11 @@ public class GameState {
     }
 
     public void setCompleted(boolean completed) {
+        if (this.isCompleted == completed) return;
+
         this.isCompleted = completed;
-        if (completed) {
-            notifyEvent(GameEvent.GAME_COMPLETED);
-        }
+
+        if (completed) notifyEvent(GameEvent.GAME_COMPLETED);
     }
 
     public void setLost() {

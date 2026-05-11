@@ -1,6 +1,6 @@
 package helpers;
 
-import enity.Level;
+import entity.Level;
 
 import java.util.List;
 

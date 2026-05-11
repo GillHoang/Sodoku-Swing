@@ -8,6 +8,9 @@ public class MistakeObserver implements GameObserver {
     @Override
     public void onCellChanged(int row, int colm, int value) {
         if (Main.STATE.isCompleted()) return;
+
+        if (value == 0) return;
+
         if (Main.STATE.getSolution()[row][colm] != value) {
             Main.STATE.incrementMistakes();
 
