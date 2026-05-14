@@ -214,6 +214,16 @@ public class GameState {
         }
     }
 
+    public boolean hasCard(String cardName) {
+        for (Component c : pnCard.getComponents()) {
+            String name = c.getName();
+            if (cardName.equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void removeEndingPanels() {
         for (Component c : pnCard.getComponents()) {
             if (c instanceof Ending) {
@@ -226,7 +236,10 @@ public class GameState {
         stopTimer();
         isCompleted = false;
         removeSudokuPanels();
-        pnCard.add(new SudokuPanel(), CARD_SUDOKU);
+
+        SudokuPanel sudokuPanel = new SudokuPanel();
+        sudokuPanel.setName(CARD_SUDOKU);
+        pnCard.add(sudokuPanel, CARD_SUDOKU);
         lyCard.show(pnCard, CARD_SUDOKU);
         pnCard.revalidate();
         pnCard.repaint();

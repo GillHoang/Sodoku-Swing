@@ -15,8 +15,6 @@ public class SudokuPanel extends JPanel {
     public SudokuPanel() {
         super();
 
-        Main.STATE.startTimer();
-
         setLayout(new BorderLayout());
 
         setBackground(Colors.clBe);
@@ -56,9 +54,6 @@ public class SudokuPanel extends JPanel {
                 pnTime.add(lbTime);
                 pnTime.setBackground(clLam);
 
-                Timer timer = Main.STATE.getTimer();
-                timer.start();
-
                 JPanel pnMistake = new JPanel();
                 int mistakes = Main.STATE.getMistakes();
                 JLabel lbMistake = Main.STATE.getLbMistakes();
@@ -80,6 +75,8 @@ public class SudokuPanel extends JPanel {
                 super();
 
                 Main.STATE.init();
+                Main.STATE.startTimer();
+                Main.STATE.getTimer().start();
 
                 setLayout(new GridLayout(9, 9));
 

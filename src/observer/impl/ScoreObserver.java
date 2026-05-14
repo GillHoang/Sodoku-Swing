@@ -9,6 +9,11 @@ public class ScoreObserver implements GameObserver {
     public void onCellChanged(int row, int colm, int value) {
         if (Main.STATE.isCompleted()) return;
 
+        // Don't penalize clearing a cell.
+        if (value == 0) {
+            return;
+        }
+
         if (Main.STATE.getSolutionCell(row, colm) == value) {
             Main.STATE.addScore(20);
         } else {

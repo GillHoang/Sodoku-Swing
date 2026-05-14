@@ -71,7 +71,11 @@ public class LoginPanel extends JPanel {
                 }
 
                 Main.STATE.setUsername(input);
-                Main.STATE.getPnCard().add(new ChooseLevelPanel(), GameState.CARD_CHOOSE_LEVEL);
+                if (!Main.STATE.hasCard(GameState.CARD_CHOOSE_LEVEL)) {
+                    ChooseLevelPanel chooseLevelPanel = new ChooseLevelPanel();
+                    chooseLevelPanel.setName(GameState.CARD_CHOOSE_LEVEL);
+                    Main.STATE.getPnCard().add(chooseLevelPanel, GameState.CARD_CHOOSE_LEVEL);
+                }
                 Main.STATE.getLyCard().show(Main.STATE.getPnCard(), GameState.CARD_CHOOSE_LEVEL);
             });
 

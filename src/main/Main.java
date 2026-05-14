@@ -28,7 +28,7 @@ public class Main extends JFrame {
     }
 
     public static void main(String[] args) {
-        new Main();
+        SwingUtilities.invokeLater(Main::new);
     }
 
     private void setup() {

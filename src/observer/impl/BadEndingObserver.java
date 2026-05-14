@@ -18,6 +18,8 @@ public class BadEndingObserver implements GameObserver {
     public void onGameStateChanged(GameEvent event) {
         if (event != GameEvent.GAME_LOST) return;
 
+        Main.STATE.stopTimer();
+
         new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {

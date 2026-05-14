@@ -24,6 +24,7 @@ public class GoodEndingObserver implements GameObserver {
         if (event != GameEvent.GAME_COMPLETED) return;
 
         Main.STATE.setCompleted(true);
+        Main.STATE.stopTimer();
 
         new SwingWorker<Void, Void>() {
             @Override
