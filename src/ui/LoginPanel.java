@@ -64,7 +64,7 @@ public class LoginPanel extends JPanel {
             btnDangNhap.setBackground(clVang);
             btnDangNhap.setForeground(clTrang);
             btnDangNhap.addActionListener(e -> {
-                String input = tfUserName.getText();
+                String input = tfUserName.getText().trim();
 
                 if (input.isEmpty()) {
                     return;

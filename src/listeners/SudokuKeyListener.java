@@ -3,7 +3,6 @@ package listeners;
 import main.Main;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -38,8 +37,7 @@ public class SudokuKeyListener extends KeyAdapter {
     }
 
     private boolean isCellEditable(int row, int col) {
-        Color fg = buttons[row][col].getForeground();
-        return fg != clVang && fg != clDen;
+        return Main.STATE.canEditCell(row, col);
     }
 
     private boolean isDeleteKey(int keyCode) {

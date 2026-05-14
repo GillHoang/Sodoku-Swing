@@ -35,6 +35,7 @@ public class GameState {
     private boolean isCompleted;
     private int[][] board;
     private int[][] solution;
+    private boolean[][] fixedCells;
     private long startTime;
     private String username;
     private int score;
@@ -42,6 +43,7 @@ public class GameState {
     private GameState() {
         solution = new int[9][9];
         board = new int[9][9];
+        fixedCells = new boolean[9][9];
         mistakes = 0;
         isCompleted = false;
 
@@ -80,6 +82,12 @@ public class GameState {
     public void init() {
         solution = Sudoku.sudokuGenerator();
         board = Sudoku.createPuzzle(solution, Utils.convertNumberToRemove(level));
+        fixedCells = new boolean[9][9];
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                fixedCells[i][j] = board[i][j] != 0;
+            }
+        }
         mistakes = 0;
         isCompleted = false;
         score = 0;
@@ -89,13 +97,32 @@ public class GameState {
 
     public boolean setCellValue(int row, int colm, int value) {
 
+        if (isCompleted) return false;
+
         if (mistakes >= MAX_MISTAKES) return false;
+
+        if (isFixedCell(row, colm) || isCellCorrect(row, colm)) return false;
 
         board[row][colm] = value;
 
         notifyCellChanged(row, colm, value);
 
         return true;
+    }
+
+    public boolean isFixedCell(int row, int col) {
+        return fixedCells[row][col];
+    }
+
+    public boolean isCellCorrect(int row, int col) {
+        int v = board[row][col];
+        return v != 0 && v == solution[row][col];
+    }
+
+    public boolean canEditCell(int row, int col) {
+        if (isCompleted) return false;
+        if (mistakes >= MAX_MISTAKES) return false;
+        return !isFixedCell(row, col) && !isCellCorrect(row, col);
     }
 
     public int getCell(int row, int col) {
@@ -182,8 +209,7 @@ public class GameState {
     }
 
     public void addScore(int score) {
-        if (this.score < 0) return;
-        this.score += score;
+        this.score = Math.max(0, this.score + score);
     }
 
     public JLabel getLbScore() {
