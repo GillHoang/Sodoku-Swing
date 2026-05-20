@@ -22,11 +22,14 @@ public class SudokuPanel extends JPanel implements GameView {
         headerPanel = new SudokuHeaderPanel();
         hudBar = new SudokuHudBar();
         boardGrid = new SudokuBoardGrid();
+        SudokuNumberPad numberPad = new SudokuNumberPad();
+        numberPad.setOnDigit(boardGrid::inputAtSelection);
 
         JPanel center = new JPanel(new BorderLayout());
         center.setBackground(clLam);
         center.add(hudBar, BorderLayout.NORTH);
         center.add(boardGrid, BorderLayout.CENTER);
+        center.add(numberPad, BorderLayout.SOUTH);
 
         add(headerPanel, BorderLayout.NORTH);
         add(center, BorderLayout.CENTER);

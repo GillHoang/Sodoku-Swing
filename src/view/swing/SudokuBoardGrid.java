@@ -16,6 +16,8 @@ public class SudokuBoardGrid extends JPanel {
     private final GameView.CellState[][] cellStates = new GameView.CellState[SIZE][SIZE];
     private transient GameView.CellInputHandler cellInputHandler;
     private transient GameView.CellSelectionHandler cellSelectionHandler;
+    private int selectedRow = -1;
+    private int selectedCol = -1;
 
     public SudokuBoardGrid() {
         super(new GridLayout(SIZE, SIZE));
@@ -38,7 +40,19 @@ public class SudokuBoardGrid extends JPanel {
         this.cellSelectionHandler = handler;
     }
 
+    public void inputAtSelection(int value) {
+        if (selectedRow < 0 || selectedCol < 0 || cellInputHandler == null) {
+            return;
+        }
+        if (value < 0 || value > 9) {
+            return;
+        }
+        cellInputHandler.onInput(selectedRow, selectedCol, value);
+    }
+
     public void applySnapshot(GameSnapshot snapshot) {
+        selectedRow = -1;
+        selectedCol = -1;
         int[][] board = snapshot.board();
         boolean[][] fixed = snapshot.fixedCells();
         for (int i = 0; i < SIZE; i++) {
@@ -85,6 +99,8 @@ public class SudokuBoardGrid extends JPanel {
     }
 
     public void highlightSelection(int row, int col, int value) {
+        selectedRow = row;
+        selectedCol = col;
         clearCellBackgrounds();
         for (int i = 0; i < SIZE; i++) {
             buttons[row][i].setBackground(clXam);
@@ -144,6 +160,8 @@ public class SudokuBoardGrid extends JPanel {
             String[] coords = e.getActionCommand().split(" ");
             int r = Integer.parseInt(coords[0]);
             int c = Integer.parseInt(coords[1]);
+            selectedRow = r;
+            selectedCol = c;
             if (cellSelectionHandler != null) {
                 cellSelectionHandler.onSelected(r, c);
             }
