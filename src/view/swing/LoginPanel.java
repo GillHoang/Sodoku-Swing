@@ -1,22 +1,35 @@
-package ui;
+package view.swing;
 
-import helpers.Utils;
-import main.Main;
-import state.GameState;
+import common.helpers.Utils;
+import view.LoginView;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Consumer;
 
-import static helpers.Colors.*;
+import static common.helpers.Colors.*;
 
-public class LoginPanel extends JPanel {
+public class LoginPanel extends JPanel implements LoginView {
+    private transient Consumer<String> onStart;
+
     public LoginPanel() {
         setLayout(new BorderLayout());
 
         add(new UpPanel(), BorderLayout.NORTH);
-        add(new CenterPanel(), BorderLayout.CENTER);
+        add(new CenterPanel(this::handleStartClicked), BorderLayout.CENTER);
 
         setBackground(clBe);
+    }
+
+    @Override
+    public void setStartHandler(Consumer<String> onStart) {
+        this.onStart = onStart;
+    }
+
+    private void handleStartClicked(String username) {
+        if (onStart != null) {
+            onStart.accept(username);
+        }
     }
 
     static class UpPanel extends JPanel {
@@ -35,7 +48,10 @@ public class LoginPanel extends JPanel {
     }
 
     static class CenterPanel extends JPanel {
-        public CenterPanel() {
+        private final transient Consumer<String> startHandler;
+
+        public CenterPanel(Consumer<String> startHandler) {
+            this.startHandler = startHandler;
             setLayout(new GridBagLayout());
             setBackground(clBe);
 
@@ -65,18 +81,7 @@ public class LoginPanel extends JPanel {
             btnDangNhap.setForeground(clTrang);
             btnDangNhap.addActionListener(e -> {
                 String input = tfUserName.getText().trim();
-
-                if (input.isEmpty()) {
-                    return;
-                }
-
-                Main.STATE.setUsername(input);
-                if (!Main.STATE.hasCard(GameState.CARD_CHOOSE_LEVEL)) {
-                    ChooseLevelPanel chooseLevelPanel = new ChooseLevelPanel();
-                    chooseLevelPanel.setName(GameState.CARD_CHOOSE_LEVEL);
-                    Main.STATE.getPnCard().add(chooseLevelPanel, GameState.CARD_CHOOSE_LEVEL);
-                }
-                Main.STATE.getLyCard().show(Main.STATE.getPnCard(), GameState.CARD_CHOOSE_LEVEL);
+                startHandler.accept(input);
             });
 
             return btnDangNhap;

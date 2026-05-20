@@ -1,6 +1,6 @@
-package helpers;
+package common.helpers;
 
-import entity.Level;
+import common.entity.Level;
 
 import java.util.List;
 

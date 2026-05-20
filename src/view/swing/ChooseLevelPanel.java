@@ -1,26 +1,50 @@
-package ui;
+package view.swing;
 
-import helpers.Levels;
-import helpers.Utils;
-import main.Main;
+import common.helpers.Levels;
+import common.helpers.Utils;
+import view.ChooseLevelView;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.IntConsumer;
 
-import static helpers.Colors.*;
+import static common.helpers.Colors.*;
 
-public class ChooseLevelPanel extends JPanel {
+public class ChooseLevelPanel extends JPanel implements ChooseLevelView {
+    private final UpPanel upPanel;
+    private transient IntConsumer onLevelSelected;
+
     public ChooseLevelPanel() {
         setLayout(new BorderLayout());
 
-        add(new UpPanel(), BorderLayout.NORTH);
-        add(new CenterPanel(), BorderLayout.CENTER);
+        upPanel = new UpPanel();
+        add(upPanel, BorderLayout.NORTH);
+        add(new CenterPanel(this::handleLevelSelected), BorderLayout.CENTER);
 
         setBackground(clBe);
     }
 
+    @Override
+    public void setUsername(String username) {
+        upPanel.setUsername(username);
+    }
+
+    @Override
+    public void setLevelSelectHandler(IntConsumer onLevelSelected) {
+        this.onLevelSelected = onLevelSelected;
+    }
+
+    private void handleLevelSelected(int level) {
+        if (onLevelSelected != null) {
+            onLevelSelected.accept(level);
+        }
+    }
+
     static class CenterPanel extends JPanel {
-        public CenterPanel() {
+        private final transient IntConsumer onLevelSelected;
+
+        public CenterPanel(IntConsumer onLevelSelected) {
+            this.onLevelSelected = onLevelSelected;
             setLayout(new GridBagLayout());
             setBackground(clBe);
 
@@ -45,20 +69,19 @@ public class ChooseLevelPanel extends JPanel {
             btnLevel.setBackground(clVang);
             btnLevel.setForeground(clTrang);
 
-            btnLevel.addActionListener(e -> {
-                Main.STATE.setLevel(Utils.convertLevelToNumber(level));
-                Main.STATE.startSudokuGame();
-            });
+            btnLevel.addActionListener(e -> onLevelSelected.accept(Utils.convertLevelToNumber(level)));
 
             return btnLevel;
         }
     }
 
     static class UpPanel extends JPanel {
+        private final JLabel lbTitle;
+
         public UpPanel() {
             setLayout(new BorderLayout());
 
-            JLabel lbTitle = new JLabel("Xin chào " + Main.STATE.getUsername() + "! Vui lòng chọn level phù hợp", SwingConstants.CENTER);
+            lbTitle = new JLabel("Xin chào! Vui lòng chọn level phù hợp", SwingConstants.CENTER);
             lbTitle.setFont(Utils.createDefaultStyle(20));
             lbTitle.setForeground(clTrang);
 
@@ -66,6 +89,10 @@ public class ChooseLevelPanel extends JPanel {
 
             setBackground(clLam);
             setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(clLam, 2), BorderFactory.createEmptyBorder(10, 15, 10, 15)));
+        }
+
+        public void setUsername(String username) {
+            lbTitle.setText("Xin chào " + username + "! Vui lòng chọn level phù hợp");
         }
     }
 }
