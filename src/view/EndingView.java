@@ -1,4 +1,7 @@
 package view;
 
-public class EndingView {
+public interface EndingView {
+    void setPrimaryAction(Runnable action);
+
+    void setSecondaryAction(Runnable action);
 }

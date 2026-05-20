@@ -1,4 +1,7 @@
 package view;
 
-public class LoginView {
+import java.util.function.Consumer;
+
+public interface LoginView {
+    void setStartHandler(Consumer<String> onStart);
 }

@@ -1,4 +1,34 @@
 package view;
 
-public class GameView {
+import model.GameSnapshot;
+
+public interface GameView {
+    void render(GameSnapshot snapshot);
+
+    void updateHud(GameSnapshot snapshot);
+
+    void updateTime(long elapsedSeconds);
+
+    void updateCell(int row, int col, int value, CellState cellState);
+
+    void highlightSelection(int row, int col, int value);
+
+    void setCellInputHandler(CellInputHandler handler);
+
+    void setCellSelectionHandler(CellSelectionHandler handler);
+
+    enum CellState {
+        FIXED,
+        CORRECT,
+        WRONG,
+        NORMAL
+    }
+
+    interface CellInputHandler {
+        void onInput(int row, int col, int value);
+    }
+
+    interface CellSelectionHandler {
+        void onSelected(int row, int col);
+    }
 }
