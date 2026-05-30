@@ -3,11 +3,7 @@ package controller;
 import controller.navigation.AppScreen;
 import controller.navigation.CardNavigator;
 import model.GameSession;
-import view.ChooseLevelView;
-import view.EndingView;
-import view.GameView;
-import view.LoginView;
-import view.SwingViewsFactory;
+import view.*;
 import view.swing.DefaultSwingViewsFactory;
 
 import javax.swing.*;
@@ -76,7 +72,8 @@ public class AppController {
     private void bindActions() {
         loginView.setStartHandler(this::goToChooseLevel);
         chooseLevelView.setLevelSelectHandler(this::startSudokuGame);
-        goodEndingView.setPrimaryAction(this::navigateToChooseLevel);
+        goodEndingView.setPrimaryAction(this::restartSudokuGame);
+        goodEndingView.setSecondaryAction(this::navigateToChooseLevel);
         badEndingView.setPrimaryAction(this::restartSudokuGame);
         badEndingView.setSecondaryAction(this::navigateToChooseLevel);
     }
@@ -103,7 +100,8 @@ public class AppController {
         session.setLevel(level);
         stopCurrentGameController();
 
-        gameController = new GameController(session, gameView, this::showGoodEnding, this::showBadEnding);
+        gameController = new GameController(session, gameView, this::showGoodEnding, this::showBadEnding,
+                this::navigateToChooseLevel);
         gameController.startGame();
 
         navigator.show(AppScreen.SUDOKU);
@@ -119,10 +117,12 @@ public class AppController {
     }
 
     private void showGoodEnding() {
+        goodEndingView.showResult(session.getScore(), session.getElapsedTimeSeconds());
         navigator.show(AppScreen.GOOD_ENDING);
     }
 
     private void showBadEnding() {
+        badEndingView.showResult(session.getScore(), session.getElapsedTimeSeconds());
         navigator.show(AppScreen.BAD_ENDING);
     }
 

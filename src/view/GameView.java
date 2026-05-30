@@ -13,9 +13,15 @@ public interface GameView {
 
     void highlightSelection(int row, int col, int value);
 
+    void updateHintsRemaining(int remaining);
+
     void setCellInputHandler(CellInputHandler handler);
 
     void setCellSelectionHandler(CellSelectionHandler handler);
+
+    void setHintHandler(Runnable handler);
+
+    void setExitHandler(Runnable handler);
 
     enum CellState {
         FIXED,

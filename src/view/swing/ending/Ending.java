@@ -15,6 +15,7 @@ public class Ending extends JPanel {
 
     private final String title;
     private final int titleSize;
+    private final JLabel lbResult = new JLabel(" ", SwingConstants.CENTER);
 
     public Ending(String title, int titleSize, List<EndingAction> actions) {
         super();
@@ -39,6 +40,10 @@ public class Ending extends JPanel {
         actions.set(index, new EndingAction(actions.get(index).label(), action));
     }
 
+    public void showResult(int score, long elapsedSeconds) {
+        lbResult.setText("Điểm: " + score + "    Thời gian: " + Utils.formatTime(elapsedSeconds));
+    }
+
     class UpPanel extends JPanel {
         public UpPanel() {
             super();
@@ -49,10 +54,15 @@ public class Ending extends JPanel {
             lbTitle.setFont(Utils.createDefaultStyle(titleSize));
             lbTitle.setForeground(clTrang);
 
+            lbResult.setFont(Utils.createDefaultStyle(20));
+            lbResult.setForeground(clVang);
+
             add(lbTitle, BorderLayout.CENTER);
+            add(lbResult, BorderLayout.SOUTH);
 
             setBackground(clLam);
-            setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(clLam, 2), BorderFactory.createEmptyBorder(10, 15, 10, 15)));
+            setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(clLam, 2),
+                    BorderFactory.createEmptyBorder(10, 15, 10, 15)));
         }
     }
 
@@ -64,7 +74,8 @@ public class Ending extends JPanel {
 
             JPanel pnOptions = new JPanel();
             pnOptions.setLayout(new GridLayout(actions.size(), 1, 0, 10));
-            pnOptions.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(clLam, 2), BorderFactory.createEmptyBorder(10, 15, 10, 15)));
+            pnOptions.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(clLam, 2),
+                    BorderFactory.createEmptyBorder(10, 15, 10, 15)));
             pnOptions.setBackground(clBe);
 
             for (int i = 0; i < actions.size(); i++) {

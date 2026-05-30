@@ -7,6 +7,7 @@ import java.util.List;
 public class GoodEnding extends Ending implements EndingView {
     public GoodEnding() {
         super("Chúc mừng bạn đã qua màn thành công!", 25, List.of(
+                new EndingAction("Chơi lại", null),
                 new EndingAction("Chọn level khác", null)
         ));
     }
@@ -18,6 +19,6 @@ public class GoodEnding extends Ending implements EndingView {
 
     @Override
     public void setSecondaryAction(Runnable action) {
-        // no-op
+        setAction(1, action);
     }
 }

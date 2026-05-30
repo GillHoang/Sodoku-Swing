@@ -7,6 +7,8 @@ import view.GameView;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static common.helpers.Colors.*;
 
@@ -14,6 +16,9 @@ public class SudokuBoardGrid extends JPanel {
     private static final int SIZE = 9;
     private final JButton[][] buttons = new JButton[SIZE][SIZE];
     private final GameView.CellState[][] cellStates = new GameView.CellState[SIZE][SIZE];
+    private final boolean[][] hasValue = new boolean[SIZE][SIZE];
+    private final transient Set<Integer>[][] cellNotes = createNotesGrid();
+    private boolean notesMode;
     private transient GameView.CellInputHandler cellInputHandler;
     private transient GameView.CellSelectionHandler cellSelectionHandler;
     private int selectedRow = -1;
@@ -32,6 +37,17 @@ public class SudokuBoardGrid extends JPanel {
         decorateBorders();
     }
 
+    @SuppressWarnings("unchecked")
+    private static Set<Integer>[][] createNotesGrid() {
+        Set<Integer>[][] grid = new Set[SIZE][SIZE];
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                grid[i][j] = new TreeSet<>();
+            }
+        }
+        return grid;
+    }
+
     public void setCellInputHandler(GameView.CellInputHandler handler) {
         this.cellInputHandler = handler;
     }
@@ -40,25 +56,82 @@ public class SudokuBoardGrid extends JPanel {
         this.cellSelectionHandler = handler;
     }
 
+    public void setNotesMode(boolean enabled) {
+        this.notesMode = enabled;
+    }
+
     public void inputAtSelection(int value) {
-        if (selectedRow < 0 || selectedCol < 0 || cellInputHandler == null) {
+        if (selectedRow < 0 || selectedCol < 0) {
             return;
         }
+        handleLocalInput(selectedRow, selectedCol, value);
+    }
+
+    private void handleLocalInput(int row, int col, int value) {
         if (value < 0 || value > 9) {
             return;
         }
-        cellInputHandler.onInput(selectedRow, selectedCol, value);
+        if (notesMode && isNoteEditable(row, col)) {
+            if (value == 0) {
+                cellNotes[row][col].clear();
+            } else {
+                Set<Integer> notes = cellNotes[row][col];
+                if (!notes.add(value)) {
+                    notes.remove(value);
+                }
+            }
+            renderNotes(row, col);
+            return;
+        }
+        if (cellInputHandler != null) {
+            cellInputHandler.onInput(row, col, value);
+        }
+    }
+
+    private boolean isNoteEditable(int row, int col) {
+        GameView.CellState state = cellStates[row][col];
+        return state != GameView.CellState.FIXED
+                && state != GameView.CellState.CORRECT
+                && !hasValue[row][col];
+    }
+
+    private void renderNotes(int row, int col) {
+        Set<Integer> notes = cellNotes[row][col];
+        JButton button = buttons[row][col];
+        if (notes.isEmpty()) {
+            button.setText(" ");
+            button.setForeground(null);
+            return;
+        }
+        StringBuilder sb = new StringBuilder(
+                "<html><table cellspacing='0' cellpadding='0' style='width:34px;'>");
+        for (int r = 0; r < 3; r++) {
+            sb.append("<tr>");
+            for (int c = 0; c < 3; c++) {
+                int n = r * 3 + c + 1;
+                sb.append("<td align='center' style='width:11px;font-size:9px;color:#777777;'>");
+                sb.append(notes.contains(n) ? n : "&nbsp;");
+                sb.append("</td>");
+            }
+            sb.append("</tr>");
+        }
+        sb.append("</table></html>");
+        button.setForeground(clDen);
+        button.setText(sb.toString());
     }
 
     public void applySnapshot(GameSnapshot snapshot) {
         selectedRow = -1;
         selectedCol = -1;
+        notesMode = false;
         int[][] board = snapshot.board();
         boolean[][] fixed = snapshot.fixedCells();
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 JButton button = buttons[i][j];
                 int value = board[i][j];
+                cellNotes[i][j].clear();
+                hasValue[i][j] = value != 0;
                 if (value == 0) {
                     button.setText(" ");
                     button.setForeground(null);
@@ -84,11 +157,18 @@ public class SudokuBoardGrid extends JPanel {
     public void updateCell(int row, int col, int value, GameView.CellState cellState) {
         JButton btn = buttons[row][col];
         if (value == 0) {
-            btn.setText(" ");
-            btn.setForeground(null);
+            hasValue[row][col] = false;
             cellStates[row][col] = GameView.CellState.NORMAL;
+            if (cellNotes[row][col].isEmpty()) {
+                btn.setText(" ");
+                btn.setForeground(null);
+            } else {
+                renderNotes(row, col);
+            }
             return;
         }
+        cellNotes[row][col].clear();
+        hasValue[row][col] = true;
         btn.setText(String.valueOf(value));
         cellStates[row][col] = cellState;
         btn.setForeground(switch (cellState) {
@@ -166,11 +246,7 @@ public class SudokuBoardGrid extends JPanel {
                 cellSelectionHandler.onSelected(r, c);
             }
         });
-        btn.addKeyListener(new SudokuKeyListener(row, col, (r, c, value) -> {
-            if (cellInputHandler != null) {
-                cellInputHandler.onInput(r, c, value);
-            }
-        }));
+        btn.addKeyListener(new SudokuKeyListener(row, col, this::handleLocalInput));
         return btn;
     }
 }
