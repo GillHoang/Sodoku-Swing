@@ -1,5 +1,7 @@
 package common.helpers;
 
+import common.entity.Level;
+
 import java.awt.*;
 
 public class Utils {
@@ -11,21 +13,29 @@ public class Utils {
     }
 
     public static int convertLevelToNumber(String level) {
-        if (level.equals(Levels.EASY.name())) return Levels.EASY.value();
-        else if (level.equals(Levels.MEDIUM.name())) return Levels.MEDIUM.value();
-        else return Levels.HARD.value();
+        return findLevelByName(level).value();
     }
 
     public static String convertNumberToLevel(int level) {
-        if (level == Levels.EASY.value()) return Levels.EASY.name();
-        else if (level == Levels.MEDIUM.value()) return Levels.MEDIUM.name();
-        return Levels.HARD.name();
+        return findLevelByValue(level).name();
     }
 
     public static int convertNumberToRemove(int level) {
-        if (level == Levels.EASY.value()) return Levels.EASY.removeParts();
-        else if (level == Levels.MEDIUM.value()) return Levels.MEDIUM.removeParts();
-        return Levels.HARD.removeParts();
+        return findLevelByValue(level).removeParts();
+    }
+
+    private static Level findLevelByName(String name) {
+        return Levels.LEVEL_LIST.stream()
+                .filter(level -> level.name().equals(name))
+                .findFirst()
+                .orElse(Levels.HARD);
+    }
+
+    private static Level findLevelByValue(int value) {
+        return Levels.LEVEL_LIST.stream()
+                .filter(level -> level.value() == value)
+                .findFirst()
+                .orElse(Levels.HARD);
     }
 
     public static String formatTime(long elapsedSeconds) {
