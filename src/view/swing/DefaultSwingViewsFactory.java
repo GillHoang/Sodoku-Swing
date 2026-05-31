@@ -1,10 +1,6 @@
 package view.swing;
 
-import view.ChooseLevelView;
-import view.EndingView;
-import view.GameView;
-import view.LoginView;
-import view.SwingViewsFactory;
+import view.*;
 import view.swing.ending.BadEnding;
 import view.swing.ending.GoodEnding;
 

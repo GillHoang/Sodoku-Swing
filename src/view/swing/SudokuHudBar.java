@@ -6,7 +6,8 @@ import model.GameSnapshot;
 import javax.swing.*;
 import java.awt.*;
 
-import static common.helpers.Colors.*;
+import static common.helpers.Colors.clLam;
+import static common.helpers.Colors.clTrang;
 
 public class SudokuHudBar extends JPanel {
     private final JLabel lbScore = new JLabel("Điểm: 0");

@@ -25,16 +25,6 @@ public class SudokuNumberPad extends JPanel {
         add(clearBtn);
     }
 
-    public void setOnDigit(IntConsumer onDigit) {
-        this.onDigit = onDigit;
-    }
-
-    private JButton createDigitButton(int digit) {
-        JButton btn = createPadButton(String.valueOf(digit));
-        btn.addActionListener(e -> fireDigit(digit));
-        return btn;
-    }
-
     private static JButton createPadButton(String label) {
         JButton btn = new JButton(label);
         btn.setFont(Utils.createDefaultStyle(20));
@@ -42,6 +32,16 @@ public class SudokuNumberPad extends JPanel {
         btn.setForeground(Colors.clDen);
         btn.setFocusPainted(false);
         btn.setMargin(new Insets(4, 4, 4, 4));
+        return btn;
+    }
+
+    public void setOnDigit(IntConsumer onDigit) {
+        this.onDigit = onDigit;
+    }
+
+    private JButton createDigitButton(int digit) {
+        JButton btn = createPadButton(String.valueOf(digit));
+        btn.addActionListener(e -> fireDigit(digit));
         return btn;
     }
 

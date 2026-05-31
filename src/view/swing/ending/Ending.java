@@ -30,9 +30,6 @@ public class Ending extends JPanel {
         add(new CenterPanel(), BorderLayout.CENTER);
     }
 
-    public record EndingAction(String label, Runnable action) {
-    }
-
     protected void setAction(int index, Runnable action) {
         if (index < 0 || index >= actions.size()) {
             return;
@@ -42,6 +39,9 @@ public class Ending extends JPanel {
 
     public void showResult(int score, long elapsedSeconds) {
         lbResult.setText("Điểm: " + score + "    Thời gian: " + Utils.formatTime(elapsedSeconds));
+    }
+
+    public record EndingAction(String label, Runnable action) {
     }
 
     class UpPanel extends JPanel {

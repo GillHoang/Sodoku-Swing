@@ -5,7 +5,8 @@ import common.helpers.Utils;
 import javax.swing.*;
 import java.awt.*;
 
-import static common.helpers.Colors.*;
+import static common.helpers.Colors.clLam;
+import static common.helpers.Colors.clTrang;
 
 public class SudokuHeaderPanel extends JPanel {
     private final JLabel lbTitle = new JLabel("", SwingConstants.CENTER);

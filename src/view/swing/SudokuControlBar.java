@@ -41,6 +41,16 @@ public class SudokuControlBar extends JPanel {
         add(notesBtn);
     }
 
+    private static JButton createButton(String label) {
+        JButton btn = new JButton(label);
+        btn.setFont(Utils.createDefaultStyle(16));
+        btn.setBackground(Colors.clTrang);
+        btn.setForeground(Colors.clDen);
+        btn.setFocusPainted(false);
+        btn.setMargin(new Insets(4, 4, 4, 4));
+        return btn;
+    }
+
     public void setOnExit(Runnable onExit) {
         this.onExit = onExit;
     }
@@ -69,15 +79,5 @@ public class SudokuControlBar extends JPanel {
         if (onToggleNotes != null) {
             onToggleNotes.accept(notesEnabled);
         }
-    }
-
-    private static JButton createButton(String label) {
-        JButton btn = new JButton(label);
-        btn.setFont(Utils.createDefaultStyle(16));
-        btn.setBackground(Colors.clTrang);
-        btn.setForeground(Colors.clDen);
-        btn.setFocusPainted(false);
-        btn.setMargin(new Insets(4, 4, 4, 4));
-        return btn;
     }
 }
