@@ -186,6 +186,13 @@ public class SudokuBoardGrid extends JPanel {
             buttons[row][i].setBackground(clXam);
             buttons[i][col].setBackground(clXam);
         }
+        int boxRowStart = row - row % 3;
+        int boxColStart = col - col % 3;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                buttons[boxRowStart + i][boxColStart + j].setBackground(clXam);
+            }
+        }
         if (value > 0) {
             for (int i = 0; i < SIZE; i++) {
                 for (int j = 0; j < SIZE; j++) {

@@ -118,11 +118,53 @@ public class Sudoku {
             }
         }
         Collections.shuffle(filled, rand);
-        int remove = Math.min(k, filled.size());
-        for (int n = 0; n < remove; n++) {
-            int[] cell = filled.get(n);
-            grid[cell[0]][cell[1]] = 0;
+
+        int removed = 0;
+        for (int[] cell : filled) {
+            if (removed >= k) {
+                break;
+            }
+            int row = cell[0];
+            int col = cell[1];
+            int backup = grid[row][col];
+            grid[row][col] = 0;
+            if (countSolutions(grid, 2) == 1) {
+                removed++;
+            } else {
+                grid[row][col] = backup;
+            }
         }
+    }
+
+    public static int countSolutions(int[][] grid, int limit) {
+        int[][] copy = new int[9][9];
+        for (int i = 0; i < 9; i++) {
+            System.arraycopy(grid[i], 0, copy[i], 0, 9);
+        }
+        return countSolutionsRecursive(copy, limit);
+    }
+
+    private static int countSolutionsRecursive(int[][] grid, int limit) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (grid[i][j] == 0) {
+                    return countSolutionsForCell(grid, i, j, limit);
+                }
+            }
+        }
+        return 1;
+    }
+
+    private static int countSolutionsForCell(int[][] grid, int i, int j, int limit) {
+        int count = 0;
+        for (int num = 1; num <= 9 && count < limit; num++) {
+            if (checkIfSafe(grid, i, j, num)) {
+                grid[i][j] = num;
+                count += countSolutionsRecursive(grid, limit);
+                grid[i][j] = 0;
+            }
+        }
+        return count;
     }
 
     // Generate a Sudoku grid with K empty cells
