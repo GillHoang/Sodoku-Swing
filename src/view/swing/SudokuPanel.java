@@ -2,6 +2,9 @@ package view.swing;
 
 import common.helpers.Colors;
 import common.helpers.Utils;
+import model.CellState;
+import model.GameEvent;
+import model.GameObserver;
 import model.GameSnapshot;
 import view.GameView;
 
@@ -10,7 +13,7 @@ import java.awt.*;
 
 import static common.helpers.Colors.clLam;
 
-public class SudokuPanel extends JPanel implements GameView {
+public class SudokuPanel extends JPanel implements GameView, GameObserver {
     private final SudokuHeaderPanel headerPanel;
     private final SudokuHudBar hudBar;
     private final SudokuBoardGrid boardGrid;
@@ -44,16 +47,39 @@ public class SudokuPanel extends JPanel implements GameView {
     }
 
     @Override
+    public void onGameStateChanged(GameEvent event) {
+        switch (event.type()) {
+            case GAME_STARTED -> {
+                updateHud(event.snapshot());
+                boardGrid.applySnapshot(event.snapshot());
+                controlBar.resetNotes();
+            }
+            case CELL_UPDATED -> {
+                boardGrid.updateCell(event.row(), event.col(), event.value(), event.cellState());
+                updateHud(event.snapshot());
+                boardGrid.highlightSelection(event.row(), event.col(), event.value());
+                controlBar.setHintsRemaining(event.hintsRemaining());
+            }
+            case HINT_APPLIED -> {
+                boardGrid.updateCell(event.row(), event.col(), event.value(), CellState.CORRECT);
+                updateHud(event.snapshot());
+                boardGrid.highlightSelection(event.row(), event.col(), event.value());
+                controlBar.setHintsRemaining(event.hintsRemaining());
+            }
+            case GAME_ENDED -> updateHud(event.snapshot());
+        }
+    }
+
+    private void updateHud(GameSnapshot snapshot) {
+        hudBar.updateHud(snapshot);
+        headerPanel.setTitle(snapshot.username(), Utils.convertNumberToLevel(snapshot.level()));
+    }
+
+    @Override
     public void render(GameSnapshot snapshot) {
         updateHud(snapshot);
         boardGrid.applySnapshot(snapshot);
         controlBar.resetNotes();
-    }
-
-    @Override
-    public void updateHud(GameSnapshot snapshot) {
-        hudBar.updateHud(snapshot);
-        headerPanel.setTitle(snapshot.username(), Utils.convertNumberToLevel(snapshot.level()));
     }
 
     @Override
@@ -62,18 +88,8 @@ public class SudokuPanel extends JPanel implements GameView {
     }
 
     @Override
-    public void updateCell(int row, int col, int value, CellState cellState) {
-        boardGrid.updateCell(row, col, value, cellState);
-    }
-
-    @Override
     public void highlightSelection(int row, int col, int value) {
         boardGrid.highlightSelection(row, col, value);
-    }
-
-    @Override
-    public void updateHintsRemaining(int remaining) {
-        controlBar.setHintsRemaining(remaining);
     }
 
     @Override

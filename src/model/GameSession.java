@@ -3,6 +3,9 @@ package model;
 import common.helpers.Sudoku;
 import common.helpers.Utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GameSession {
     private static final int SIZE = 9;
     private static final int MAX_MISTAKES = 3;
@@ -11,6 +14,7 @@ public class GameSession {
     private final int[][] board = new int[SIZE][SIZE];
     private final boolean[][] fixedCells = new boolean[SIZE][SIZE];
     private final boolean[][] wasCorrect = new boolean[SIZE][SIZE];
+    private final List<GameObserver> observers = new ArrayList<>();
     private int level;
     private int mistakes;
     private int score;
@@ -19,6 +23,20 @@ public class GameSession {
     private long startTime;
     private long endTime;
     private String username = "";
+
+    public void addObserver(GameObserver observer) {
+        observers.add(observer);
+    }
+
+    public void removeObserver(GameObserver observer) {
+        observers.remove(observer);
+    }
+
+    private void notifyObservers(GameEvent event) {
+        for (GameObserver observer : observers) {
+            observer.onGameStateChanged(event);
+        }
+    }
 
     public String getUsername() {
         return username;
@@ -41,6 +59,8 @@ public class GameSession {
         int[][] puzzle = Sudoku.createPuzzle(generated, Utils.convertNumberToRemove(level));
 
         applyGeneratedPuzzle(generated, puzzle);
+
+        notifyObservers(GameEvent.gameStarted(snapshot(), getHintsRemaining()));
     }
 
     private void applyGeneratedPuzzle(int[][] generated, int[][] puzzle) {
@@ -62,10 +82,7 @@ public class GameSession {
     }
 
     public CellInputResult inputCell(int row, int col, int value) {
-        if (phase != GamePhase.PLAYING) {
-            return CellInputResult.rejected();
-        }
-        if (!canEditCell(row, col)) {
+        if (phase != GamePhase.PLAYING || !canEditCell(row, col)) {
             return CellInputResult.rejected();
         }
 
@@ -78,9 +95,28 @@ public class GameSession {
         }
         wasCorrect[row][col] = correctNow;
 
+        updatePhaseAfterInput(row, col, value, previousValue);
+
+        boolean completed = phase != GamePhase.PLAYING;
+        boolean won = phase == GamePhase.WON;
+        if (completed) {
+            endTime = System.currentTimeMillis();
+        }
+
+        CellState cellState = resolveCellState(value, correctNow);
+        notifyObservers(GameEvent.cellUpdated(row, col, value, cellState, snapshot(), getHintsRemaining()));
+
+        if (completed) {
+            notifyObservers(GameEvent.gameEnded(snapshot(), getHintsRemaining()));
+        }
+
         boolean incorrectInput = value != 0 && value != solution[row][col];
-        boolean newMistake = incorrectInput && value != previousValue;
-        if (newMistake) {
+        return new CellInputResult(true, cellState, incorrectInput, completed, won);
+    }
+
+    private void updatePhaseAfterInput(int row, int col, int value, int previousValue) {
+        boolean incorrectInput = value != 0 && value != solution[row][col];
+        if (incorrectInput && value != previousValue) {
             mistakes++;
             if (mistakes >= MAX_MISTAKES) {
                 phase = GamePhase.LOST;
@@ -88,13 +124,13 @@ public class GameSession {
         } else if (!incorrectInput && isSolved()) {
             phase = GamePhase.WON;
         }
+    }
 
-        boolean completed = phase != GamePhase.PLAYING;
-        boolean won = phase == GamePhase.WON;
-        if (completed) {
-            endTime = System.currentTimeMillis();
+    private CellState resolveCellState(int value, boolean correctNow) {
+        if (value == 0) {
+            return CellState.NORMAL;
         }
-        return new CellInputResult(true, correctNow, incorrectInput, completed, won);
+        return correctNow ? CellState.CORRECT : CellState.WRONG;
     }
 
     public HintResult useHint() {
@@ -120,6 +156,13 @@ public class GameSession {
         }
         boolean completed = phase != GamePhase.PLAYING;
         boolean won = phase == GamePhase.WON;
+
+        notifyObservers(GameEvent.hintApplied(targetRow, targetCol, value, snapshot(), getHintsRemaining()));
+
+        if (completed) {
+            notifyObservers(GameEvent.gameEnded(snapshot(), getHintsRemaining()));
+        }
+
         return new HintResult(true, targetRow, targetCol, value, completed, won);
     }
 
@@ -135,13 +178,6 @@ public class GameSession {
                 }
             }
         }
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                if (!fixedCells[i][j] && isCellCorrect(i, j)) {
-                    return new int[]{i, j};
-                }
-            }
-        }
         return new int[0];
     }
 
@@ -149,12 +185,16 @@ public class GameSession {
         if (phase != GamePhase.PLAYING || mistakes >= MAX_MISTAKES) {
             return false;
         }
-        return !fixedCells[row][col] && isCellCorrect(row, col);
+        if (fixedCells[row][col]) {
+            return false;
+        }
+        int value = board[row][col];
+        return value == 0 || value != solution[row][col];
     }
 
     public boolean isCellCorrect(int row, int col) {
         int value = board[row][col];
-        return value == 0 || value != solution[row][col];
+        return value == 0 || value == solution[row][col];
     }
 
     public int getCell(int row, int col) {
@@ -207,10 +247,10 @@ public class GameSession {
         return true;
     }
 
-    public record CellInputResult(boolean accepted, boolean correctInput, boolean incorrectInput, boolean completed,
+    public record CellInputResult(boolean accepted, CellState cellState, boolean incorrectInput, boolean completed,
                                   boolean won) {
         public static CellInputResult rejected() {
-            return new CellInputResult(false, false, false, false, false);
+            return new CellInputResult(false, null, false, false, false);
         }
     }
 

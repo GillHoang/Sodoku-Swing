@@ -16,7 +16,7 @@ public class SudokuControlBar extends JPanel {
     private transient Runnable onExit;
     private transient Runnable onHint;
     private transient Consumer<Boolean> onToggleNotes;
-    private boolean notesEnabled;
+    private transient boolean notesEnabled;
 
     public SudokuControlBar() {
         super(new GridLayout(1, 3, 6, 0));

@@ -1,7 +1,7 @@
 package controller;
 
+import model.GameObserver;
 import model.GameSession;
-import model.GameSnapshot;
 import view.GameView;
 
 import javax.swing.*;
@@ -25,10 +25,8 @@ public class GameController {
     }
 
     public void startGame() {
+        session.addObserver((GameObserver) view);
         session.startNewGame();
-        GameSnapshot snapshot = session.snapshot();
-        view.render(snapshot);
-        view.updateHintsRemaining(session.getHintsRemaining());
 
         view.setCellInputHandler(this::handleCellInput);
         view.setCellSelectionHandler(this::handleCellSelection);
@@ -40,6 +38,7 @@ public class GameController {
     }
 
     public void stop() {
+        session.removeObserver((GameObserver) view);
         timer.stop();
         if (endingDelayTimer != null) {
             endingDelayTimer.stop();
@@ -56,18 +55,6 @@ public class GameController {
         if (!result.accepted()) {
             return;
         }
-
-        GameView.CellState state = GameView.CellState.NORMAL;
-        if (value != 0 && result.correctInput()) {
-            state = GameView.CellState.CORRECT;
-        } else if (result.incorrectInput()) {
-            state = GameView.CellState.WRONG;
-        }
-
-        view.updateCell(row, col, value, state);
-        view.updateHud(session.snapshot());
-        view.highlightSelection(row, col, session.getCell(row, col));
-
         if (result.completed()) {
             scheduleEnding(result.won());
         }
@@ -75,15 +62,6 @@ public class GameController {
 
     private void handleHint() {
         GameSession.HintResult result = session.useHint();
-        if (!result.applied()) {
-            return;
-        }
-
-        view.updateCell(result.row(), result.col(), result.value(), GameView.CellState.CORRECT);
-        view.updateHud(session.snapshot());
-        view.highlightSelection(result.row(), result.col(), result.value());
-        view.updateHintsRemaining(session.getHintsRemaining());
-
         if (result.completed()) {
             scheduleEnding(result.won());
         }

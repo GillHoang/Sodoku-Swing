@@ -75,7 +75,7 @@ public class LoginPanel extends JPanel implements LoginView {
         }
 
         private JButton getBtnDangNhap(JTextField tfUserName) {
-            JButton btnDangNhap = new JButton("Bắt đầu chơi...");
+            JButton btnDangNhap = new JButton("Bắt đầu chơi");
             btnDangNhap.setFont(Utils.createDefaultStyle(20));
             btnDangNhap.setBackground(clVang);
             btnDangNhap.setForeground(clTrang);
